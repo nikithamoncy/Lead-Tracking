@@ -83,6 +83,11 @@ export const LeadList: React.FC<LeadListProps> = ({ leads, selectedId, onSelect,
               <div className="flex justify-between items-center w-full">
                 <span className="flex-1 text-xs text-zinc-500 truncate mr-2">
                   {lead.City || 'Unknown City'}
+                  {lead.Number && (
+                    <span className="ml-2 text-zinc-400">
+                      • {lead.Number.split('\n')[0]}
+                    </span>
+                  )}
                   {lead['Latest Post'] && (
                     <span className="ml-2 text-zinc-400">
                       • Post: {lead['Latest Post']}
