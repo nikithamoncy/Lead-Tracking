@@ -168,7 +168,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <EditableDropdown 
                 label="Responded" 
                 value={lead.Responded || ''} 
-                options={['Responded']} 
+                options={['Pending', 'Responded']} 
                 onSave={async (val) => await onLeadUpdate({Responded: val})} 
               />
             </div>
