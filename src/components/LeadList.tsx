@@ -38,7 +38,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads, selectedId, onSelect,
         />
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-1">
-        {leads.map((lead) => {
+        {leads.map((lead, index) => {
           const isSelected = selectedId === lead.id;
           const isResponded = lead.Responded?.trim() === 'Responded';
 
@@ -67,7 +67,7 @@ export const LeadList: React.FC<LeadListProps> = ({ leads, selectedId, onSelect,
                   isResponded ? (isSelected ? "text-emerald-300" : "text-emerald-400 group-hover:text-emerald-300") :
                   isSelected ? "text-amber-400" : "text-zinc-200 group-hover:text-zinc-100"
                 )}>
-                  {lead.Name || 'Unknown Gym'}
+                  {index + 1}. {lead.Name || 'Unknown Gym'}
                 </span>
                 {lead.primaryStatus?.startsWith('due_') && (
                   <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 animate-pulse drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
@@ -83,11 +83,6 @@ export const LeadList: React.FC<LeadListProps> = ({ leads, selectedId, onSelect,
               <div className="flex justify-between items-center w-full">
                 <span className="flex-1 text-xs text-zinc-500 truncate mr-2">
                   {lead.City || 'Unknown City'}
-                  {lead.Number && (
-                    <span className="ml-2 text-zinc-400">
-                      • {lead.Number.split('\n')[0]}
-                    </span>
-                  )}
                   {lead['Latest Post'] && (
                     <span className="ml-2 text-zinc-400">
                       • Post: {lead['Latest Post']}
