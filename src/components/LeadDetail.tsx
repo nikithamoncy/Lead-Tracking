@@ -432,6 +432,7 @@ const EditableDropdown = ({ value, label, options, onSave }: { value: string, la
 const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: string) => Promise<void> }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [customInput, setCustomInput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const OPTIONS = ['only DM', 'Comment+DM', 'Follow up 1', 'Follow up 2', 'Follow up final'];
@@ -446,6 +447,14 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
     setSelected(prev => prev.includes(opt) ? prev.filter(o => o !== opt) : [...prev, opt]);
   };
 
+  const handleAddCustom = () => {
+    const trimmed = customInput.trim();
+    if (trimmed && !selected.includes(trimmed)) {
+      setSelected(prev => [...prev, trimmed]);
+      setCustomInput('');
+    }
+  };
+
   const handleRemoveOption = async (e: React.MouseEvent, opt: string) => {
     e.stopPropagation();
     setIsSaving(true);
@@ -456,18 +465,28 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
 
   const handleSave = async () => {
     setIsSaving(true);
-    const finalVal = selected.join(', ');
+    // Include pending custom input if any
+    const trimmed = customInput.trim();
+    let finalSelected = selected;
+    if (trimmed && !selected.includes(trimmed)) {
+      finalSelected = [...selected, trimmed];
+    }
+    
+    const finalVal = finalSelected.join(', ');
     if (finalVal !== value) await onSave(finalVal);
     setIsEditing(false);
     setIsSaving(false);
   };
 
+  // Extract all unique options to display as chips, including default + custom ones currently selected
+  const displayOptions = Array.from(new Set([...OPTIONS, ...selected]));
+
   if (isEditing) {
     return (
-      <div className="flex flex-col gap-2 p-4 bg-zinc-900 border border-amber-500/30 rounded-xl relative z-20 shadow-xl w-full">
+      <div className="flex flex-col gap-3 p-4 bg-zinc-900 border border-amber-500/30 rounded-xl relative z-20 shadow-xl w-full">
         <label className="text-xs font-semibold text-zinc-400">Select Statuses</label>
         <div className="flex flex-wrap gap-2">
-          {OPTIONS.map(opt => (
+          {displayOptions.map(opt => (
             <button
               key={opt}
               onClick={() => toggleOption(opt)}
@@ -479,6 +498,25 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
             </button>
           ))}
         </div>
+        
+        <div className="mt-2 text-xs font-semibold text-zinc-400">Add Custom Status</div>
+        <div className="flex gap-2">
+           <input
+             type="text"
+             className="flex-1 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-sm text-zinc-200 focus:outline-none focus:border-amber-500"
+             placeholder="Custom status..."
+             value={customInput}
+             onChange={e => setCustomInput(e.target.value)}
+             onKeyDown={e => {
+               if (e.key === 'Enter') {
+                 e.preventDefault();
+                 handleAddCustom();
+               }
+             }}
+           />
+           <button onClick={handleAddCustom} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm transition-colors border border-zinc-700">Add</button>
+        </div>
+
         <div className="flex gap-2 justify-end mt-4 border-t border-zinc-800/50 pt-4">
           <button onClick={() => setIsEditing(false)} className="text-sm text-zinc-400 hover:text-white px-3 py-1.5">Cancel</button>
           <button onClick={handleSave} disabled={isSaving} className="text-sm bg-amber-500 text-zinc-950 px-4 py-1.5 rounded font-medium flex items-center gap-2">
