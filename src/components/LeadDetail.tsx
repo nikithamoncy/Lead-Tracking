@@ -168,7 +168,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <EditableDropdown 
                 label="Responded" 
                 value={lead.Responded || ''} 
-                options={['Pending', 'Responded']} 
+                options={['Responded']} 
                 onSave={async (val) => await onLeadUpdate({Responded: val})} 
               />
             </div>
@@ -423,7 +423,7 @@ const EditableDropdown = ({ value, label, options, onSave }: { value: string, la
         {label}
       </span>
       <span className={`text-lg font-semibold ${value === 'Responded' ? 'text-blue-400' : 'text-zinc-300'}`}>
-        {value || 'Pending'}
+        {value || 'None'}
       </span>
     </div>
   );
