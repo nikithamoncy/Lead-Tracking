@@ -45,26 +45,6 @@ export function CRM() {
               };
             });
             
-            // Sort strategy:
-            // 1. "Due" status leads first.
-            // 2. Leads with a more recent "Latest post" date come before older ones.
-            uiLeads.sort((a, b) => {
-              const aIsDue = a.primaryStatus.startsWith('due_');
-              const bIsDue = b.primaryStatus.startsWith('due_');
-              if (aIsDue && !bIsDue) return -1;
-              if (bIsDue && !aIsDue) return 1;
-              const aParsed = parseDateString(a['Latest Post']);
-              const bParsed = parseDateString(b['Latest Post']);
-              const aPost = aParsed ? aParsed.getTime() : 0;
-              const bPost = bParsed ? bParsed.getTime() : 0;
-              
-              if (aPost !== bPost) {
-                return bPost - aPost; // Most recent first
-              }
-              
-              return 0;
-            });
-            
             setLeads(uiLeads);
             if (uiLeads.length > 0) {
               setSelectedId(uiLeads[0].id);

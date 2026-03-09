@@ -35,16 +35,6 @@ function App() {
                 latestPostDate: lead['Latest Post'] ? new Date(lead['Latest Post']) : null,
               };
             });
-            
-            // Sort to put 'due' first
-            uiLeads.sort((a, b) => {
-              const aIsDue = a.primaryStatus?.startsWith('due_');
-              const bIsDue = b.primaryStatus?.startsWith('due_');
-              if (aIsDue && !bIsDue) return -1;
-              if (bIsDue && !aIsDue) return 1;
-              return 0;
-            });
-            
             setLeads(uiLeads);
             if (uiLeads.length > 0) {
               setSelectedId(uiLeads[0].id);
