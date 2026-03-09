@@ -225,8 +225,13 @@ const displayDate = (dateStr: string | undefined) => {
   return dateStr;
 };
 
-const QuickDatePickers = ({ onChange }: { onChange: (v: string) => void }) => (
-  <div className="flex flex-wrap gap-1.5 mt-2">
+const QuickDatePickers = ({ onChange, onOpenCalendar }: { onChange: (v: string) => void, onOpenCalendar?: () => void }) => (
+  <div className="flex flex-wrap gap-1.5 mt-2 items-center">
+    {onOpenCalendar && (
+      <button type="button" onClick={onOpenCalendar} className="text-zinc-400 hover:text-amber-500 bg-zinc-800 hover:bg-zinc-700 p-1.5 rounded transition-colors" title="Open Calendar">
+        <Calendar className="w-3.5 h-3.5" />
+      </button>
+    )}
     <button type="button" onClick={() => onChange(getRelativeDateStr(0))} className="text-[10px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2 py-1 rounded transition-colors">Today</button>
     <button type="button" onClick={() => onChange(getRelativeDateStr(1))} className="text-[10px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2 py-1 rounded transition-colors">1d</button>
     <button type="button" onClick={() => onChange(getRelativeDateStr(2))} className="text-[10px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-2 py-1 rounded transition-colors">2d</button>
@@ -264,6 +269,7 @@ const TimelineItem = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editVal, setEditVal] = useState(formatDateForInput(date));
   const [isSaving, setIsSaving] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -280,14 +286,28 @@ const TimelineItem = ({
       <div className="p-3 bg-zinc-900 border border-amber-500/50 rounded-xl space-y-2 relative z-20">
         <label className="text-[10px] font-bold uppercase tracking-wider text-amber-500">{label}</label>
         <input 
+          ref={inputRef}
           type="date"
           className="w-full bg-zinc-950 border border-zinc-700 rounded text-sm px-2 py-1 text-zinc-200 focus:outline-none focus:border-amber-500"
           value={editVal}
           onChange={(e) => setEditVal(e.target.value)}
         />
-        <QuickDatePickers onChange={(v) => {
-           setEditVal(formatDateForInput(v));
-        }} />
+        <QuickDatePickers 
+          onChange={(v) => setEditVal(formatDateForInput(v))} 
+          onOpenCalendar={() => {
+            if (inputRef.current) {
+              try {
+                if ('showPicker' in HTMLInputElement.prototype) {
+                  inputRef.current.showPicker();
+                } else {
+                  inputRef.current.focus();
+                }
+              } catch (e) {
+                inputRef.current.focus();
+              }
+            }
+          }}
+        />
         <div className="flex gap-2 justify-end mt-2">
           <button onClick={() => setIsEditing(false)} className="text-xs text-zinc-400 hover:text-white">Cancel</button>
           <button onClick={handleSave} disabled={isSaving} className="text-xs bg-amber-500 text-zinc-950 px-2 py-1 rounded font-medium">Save</button>
