@@ -291,6 +291,12 @@ const TimelineItem = ({
           className="w-full bg-zinc-950 border border-zinc-700 rounded text-sm px-2 py-1 text-zinc-200 focus:outline-none focus:border-amber-500"
           value={editVal}
           onChange={(e) => setEditVal(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
         />
         <QuickDatePickers 
           onChange={(v) => setEditVal(formatDateForInput(v))} 
@@ -542,8 +548,7 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
                  onKeyDown={e => {
                    if (e.key === 'Enter') {
                      e.preventDefault();
-                     handleAddCustom();
-                     setShowCustomInput(false);
+                     handleSave();
                    }
                  }}
                  autoFocus
