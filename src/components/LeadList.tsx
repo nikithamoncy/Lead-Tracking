@@ -1,7 +1,7 @@
 import React from 'react';
 import type { UILead, FollowUpStatus } from '../types';
 import { cn } from '../utils/cn';
-import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Clock, Filter } from 'lucide-react';
 
 const getStatusColors = (status: FollowUpStatus | undefined) => {
   switch (status) {
@@ -23,19 +23,45 @@ interface LeadListProps {
   onSelect: (id: string) => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (s: string) => void;
 }
 
-export const LeadList: React.FC<LeadListProps> = ({ leads, selectedId, onSelect, searchQuery, onSearchChange }) => {
+export const LeadList: React.FC<LeadListProps> = ({ 
+  leads, 
+  selectedId, 
+  onSelect, 
+  searchQuery, 
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange
+}) => {
+  // Extract unique statuses strictly for filtering dropdown options
+  const uniqueStatuses = Array.from(new Set(leads.map(l => l.primaryStatusText))).filter(Boolean).sort();
+
   return (
     <div className="flex flex-col h-full bg-zinc-900">
-      <div className="p-4 border-b border-zinc-800 sticky top-0 bg-zinc-900/90 backdrop-blur-sm z-10">
+      <div className="p-4 border-b border-zinc-800 sticky top-0 bg-zinc-900/90 backdrop-blur-sm z-10 space-y-3">
         <input
           type="text"
           placeholder="Search leads..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all shadow-inner"
+          className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all shadow-inner"
         />
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-zinc-500" />
+          <select
+            value={statusFilter}
+            onChange={(e) => onStatusFilterChange(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer"
+          >
+            <option value="">All Statuses</option>
+            {uniqueStatuses.map(status => (
+              <option key={status} value={status}>{status}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-1">
         {leads.map((lead, index) => {

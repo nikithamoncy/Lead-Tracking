@@ -12,6 +12,7 @@ function App() {
   const [leads, setLeads] = useState<UILead[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,12 +58,13 @@ function App() {
 
   const filteredLeads = useMemo(() => {
     return leads.filter(lead => 
-      lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.Category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase())
+      (statusFilter === '' || lead.primaryStatusText === statusFilter) &&
+      (lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       lead.Category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-  }, [leads, searchQuery]);
+  }, [leads, searchQuery, statusFilter]);
 
   const selectedLead = useMemo(() => {
     return leads.find(l => l.id === selectedId) || null;
@@ -96,6 +98,8 @@ function App() {
           onSelect={setSelectedId}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
         />
       </div>
       <div className="hidden md:flex flex-1 h-full relative">
