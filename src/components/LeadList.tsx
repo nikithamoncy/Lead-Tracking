@@ -74,7 +74,7 @@ export const LeadList: React.FC<LeadListProps> = ({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-1">
-        {leads.map((lead, index) => {
+        {leads.map((lead) => {
           const isSelected = selectedId === lead.id;
           const isResponded = lead.Responded?.trim() === 'Responded';
 
