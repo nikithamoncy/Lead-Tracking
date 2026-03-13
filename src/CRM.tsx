@@ -43,6 +43,7 @@ export function CRM() {
                 primaryStatus: status,
                 primaryStatusText: text,
                 latestPostDate: parseDateString(lead['Latest Post']),
+                originalIndex: index,
               };
             });
             

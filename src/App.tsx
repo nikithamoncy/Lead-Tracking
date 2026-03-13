@@ -34,6 +34,7 @@ function App() {
                 primaryStatus: status,
                 primaryStatusText: text,
                 latestPostDate: lead['Latest Post'] ? new Date(lead['Latest Post']) : null,
+                originalIndex: index,
               };
             });
             setLeads(uiLeads);

@@ -33,4 +33,5 @@ export interface UILead extends LeadData {
   primaryStatus: FollowUpStatus;
   primaryStatusText: string;
   latestPostDate: Date | null;
+  originalIndex: number;
 }

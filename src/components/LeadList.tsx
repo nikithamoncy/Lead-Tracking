@@ -36,8 +36,18 @@ export const LeadList: React.FC<LeadListProps> = ({
   statusFilter,
   onStatusFilterChange
 }) => {
-  // Extract unique statuses strictly for filtering dropdown options
-  const uniqueStatuses = Array.from(new Set(leads.map(l => l.primaryStatusText))).filter(Boolean).sort();
+  // Define all possible statuses for the filter dropdown
+  const allStatuses = [
+    'Add Instagram',
+    'Follow-up 1 Due',
+    'Follow-up 2 Due',
+    'Final Follow-up Due',
+    'Finished',
+    'Ready to Pitch',
+    'Wait for Final',
+    'Wait for Follow-up 1',
+    'Wait for Follow-up 2',
+  ];
 
   return (
     <div className="flex flex-col h-full bg-zinc-900">
@@ -57,7 +67,7 @@ export const LeadList: React.FC<LeadListProps> = ({
             className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer"
           >
             <option value="">All Statuses</option>
-            {uniqueStatuses.map(status => (
+            {allStatuses.map(status => (
               <option key={status} value={status}>{status}</option>
             ))}
           </select>
@@ -93,7 +103,7 @@ export const LeadList: React.FC<LeadListProps> = ({
                   isResponded ? (isSelected ? "text-emerald-300" : "text-emerald-400 group-hover:text-emerald-300") :
                   isSelected ? "text-amber-400" : "text-zinc-200 group-hover:text-zinc-100"
                 )}>
-                  {index + 1}. {lead.Name || 'Unknown Gym'}
+                  {lead.originalIndex + 1}. {lead.Name || 'Unknown Gym'}
                 </span>
                 {lead.primaryStatus?.startsWith('due_') && (
                   <AlertCircle className="w-4 h-4 text-rose-500 flex-shrink-0 animate-pulse drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
