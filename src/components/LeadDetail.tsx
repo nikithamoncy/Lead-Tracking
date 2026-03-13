@@ -486,7 +486,15 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
   if (isEditing) {
     return (
       <div className="flex flex-col gap-3 p-4 bg-zinc-900 border border-amber-500/30 rounded-xl relative z-20 shadow-xl w-full">
-        <label className="text-xs font-semibold text-zinc-400">Select Statuses</label>
+        <div className="flex justify-between items-center">
+          <label className="text-xs font-semibold text-zinc-400">Select Statuses</label>
+          <div className="flex gap-2">
+            <button onClick={() => setIsEditing(false)} className="text-xs text-zinc-400 hover:text-white px-2 py-1 transition-colors">Cancel</button>
+            <button onClick={handleSave} disabled={isSaving} className="text-xs bg-amber-500 text-zinc-950 px-3 py-1 rounded font-medium flex items-center gap-2 hover:bg-amber-400 transition-colors">
+              {isSaving ? '...' : 'Save'}
+            </button>
+          </div>
+        </div>
         <div className="flex flex-wrap gap-2">
           {displayOptions.map(opt => (
             <button
@@ -534,12 +542,6 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
           </div>
         )}
 
-        <div className="flex gap-2 justify-end mt-4 border-t border-zinc-800/50 pt-4">
-          <button onClick={() => setIsEditing(false)} className="text-sm text-zinc-400 hover:text-white px-3 py-1.5">Cancel</button>
-          <button onClick={handleSave} disabled={isSaving} className="text-sm bg-amber-500 text-zinc-950 px-4 py-1.5 rounded font-medium flex items-center gap-2">
-            {isSaving ? 'Saving...' : 'Save'}
-          </button>
-        </div>
       </div>
     );
   }
