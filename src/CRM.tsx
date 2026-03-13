@@ -19,6 +19,7 @@ export function CRM() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -178,8 +179,8 @@ export function CRM() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-zinc-950 overflow-hidden font-sans">
-      <div className="w-full md:w-[350px] lg:w-[400px] h-full flex-shrink-0 border-r border-zinc-800 flex flex-col">
+    <div className="flex h-screen w-screen bg-zinc-950 overflow-hidden font-sans relative">
+      <div className={`w-full md:w-[350px] lg:w-[400px] h-full flex-shrink-0 border-r border-zinc-800 flex flex-col absolute md:static inset-0 bg-zinc-950 z-10 transition-transform duration-300 ease-in-out ${isMobileDetailOpen ? '-translate-x-full md:translate-x-0' : 'translate-x-0'}`}>
         {/* CRM Header with Back Navigation */}
         <div className="p-4 border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-sm z-10 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -202,7 +203,10 @@ export function CRM() {
           <LeadList 
             leads={filteredLeads}
             selectedId={selectedId}
-            onSelect={setSelectedId}
+            onSelect={(id) => {
+              setSelectedId(id);
+              setIsMobileDetailOpen(true);
+            }}
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
             statusFilter={statusFilter}
@@ -211,11 +215,12 @@ export function CRM() {
         </div>
       </div>
       
-      <div className="hidden md:flex flex-1 h-full relative">
+      <div className={`flex-1 h-full relative w-full absolute md:static inset-0 bg-zinc-950 z-20 transition-transform duration-300 ease-in-out ${isMobileDetailOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'} flex`}>
         <LeadDetail 
           lead={selectedLead} 
           onLeadUpdate={handleLeadUpdate} 
           onLeadDelete={handleLeadDelete} 
+          onBack={() => setIsMobileDetailOpen(false)}
         />
       </div>
     </div>

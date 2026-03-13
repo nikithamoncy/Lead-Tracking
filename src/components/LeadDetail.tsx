@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { UILead, FollowUpStatus } from '../types';
-import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2 } from 'lucide-react';
+import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2, ArrowLeft } from 'lucide-react';
 
 const getStatusColors = (status: FollowUpStatus | undefined) => {
   switch (status) {
@@ -20,9 +20,10 @@ interface LeadDetailProps {
   lead: UILead | null;
   onLeadUpdate: (updatedLead: Partial<UILead>) => Promise<void>;
   onLeadDelete: (leadName: string) => Promise<void>;
+  onBack?: () => void;
 }
 
-export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLeadDelete }) => {
+export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLeadDelete, onBack }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   if (!lead) {
     return (
@@ -45,6 +46,17 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
 
   return (
     <div className="h-full w-full overflow-y-auto bg-zinc-950 p-6 md:p-10 custom-scrollbar relative">
+      {/* Top left back button (mobile only) */}
+      {onBack && (
+        <div className="absolute top-6 left-6 z-10 md:hidden">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 rounded-lg text-sm text-zinc-300 transition-colors backdrop-blur-sm shadow-md"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+        </div>
+      )}
       {/* Top right action buttons */}
       <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
         <button 
@@ -55,7 +67,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           {isDeleting ? '...' : <Trash2 className="w-4 h-4" />} Delete
         </button>
       </div>
-      <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-10 md:pt-0">
         
         {/* Header Section */}
         <div className="space-y-4 relative">
@@ -101,6 +113,12 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm shadow-lg">
           <h3 className="text-lg font-medium text-zinc-200 mb-4 pb-4 border-b border-zinc-800/50">Info & Notes</h3>
           <EditableTextarea value={lead.Info} label="Info/Notes" onSave={async (val) => await onLeadUpdate({Info: val})} />
+        </div>
+
+        {/* DM Content Section */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm shadow-lg">
+          <h3 className="text-lg font-medium text-zinc-200 mb-4 pb-4 border-b border-zinc-800/50">DM Draft / Content</h3>
+          <EditableTextarea value={lead.DM || ''} label="DM Content" onSave={async (val) => await onLeadUpdate({DM: val})} />
         </div>
 
         {/* Latest Post Section */}

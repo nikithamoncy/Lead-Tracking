@@ -19,6 +19,7 @@ export interface LeadData {
   'Follow up final': string;
   'Latest Post'?: string;
   'Responded'?: string;
+  DM?: string;
 }
 
 export type FollowUpStatus = 
