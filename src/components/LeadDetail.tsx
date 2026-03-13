@@ -359,6 +359,12 @@ const EditableTextarea = ({ value, label, onSave }: { value: string, label: stri
           className="w-full bg-zinc-950 border border-zinc-700 rounded p-3 text-sm text-zinc-200 min-h-[100px] focus:outline-none focus:border-amber-500"
           value={editVal}
           onChange={(e) => setEditVal(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
           placeholder={`Enter ${label}...`}
         />
         <div className="flex gap-2 justify-end">
@@ -402,6 +408,12 @@ const EditableDropdown = ({ value, label, options, onSave }: { value: string, la
           className="bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-1 text-sm text-zinc-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
           value={editVal}
           onChange={(e) => setEditVal(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
         >
           <option value="">None</option>
           {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
@@ -589,6 +601,12 @@ const EditableLinkBadge = ({ url, onSave }: { url: string, onSave: (val: string)
           className="bg-zinc-950 px-2 py-1 text-sm text-zinc-200 border border-zinc-800 rounded focus:outline-none focus:border-amber-500 w-48"
           value={editVal}
           onChange={e => setEditVal(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleSave();
+            }
+          }}
           placeholder="https://instagram.com/..."
         />
         <button onClick={handleSave} disabled={isSaving} className="text-amber-500 hover:text-amber-400 p-1"><Check className="w-4 h-4" /></button>
