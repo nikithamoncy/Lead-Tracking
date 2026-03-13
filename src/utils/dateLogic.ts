@@ -41,5 +41,8 @@ export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; t
     return { status: 'wait_f1', text: 'Wait for Follow-up 1' };
   }
 
+  if (!lead['Instagram URL'] || lead['Instagram URL'].trim() === '') {
+    return { status: 'uncontacted', text: 'Add Instagram' };
+  }
   return { status: 'uncontacted', text: 'Ready to Pitch' };
 }

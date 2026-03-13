@@ -434,6 +434,7 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
   const [selected, setSelected] = useState<string[]>([]);
   const [customInput, setCustomInput] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const OPTIONS = ['only DM', 'Comment+DM', 'Follow up 1', 'Follow up 2', 'Follow up final'];
   const currentOptions = value ? value.split(',').map(s => s.trim()).filter(Boolean) : [];
@@ -441,6 +442,7 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
   const handleEditClick = () => {
     setSelected(currentOptions);
     setIsEditing(true);
+    setShowCustomInput(false);
   };
 
   const toggleOption = (opt: string) => {
@@ -499,23 +501,38 @@ const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: s
           ))}
         </div>
         
-        <div className="mt-2 text-xs font-semibold text-zinc-400">Add Custom Status</div>
-        <div className="flex gap-2">
-           <input
-             type="text"
-             className="flex-1 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-sm text-zinc-200 focus:outline-none focus:border-amber-500"
-             placeholder="Custom status..."
-             value={customInput}
-             onChange={e => setCustomInput(e.target.value)}
-             onKeyDown={e => {
-               if (e.key === 'Enter') {
-                 e.preventDefault();
-                 handleAddCustom();
-               }
-             }}
-           />
-           <button onClick={handleAddCustom} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm transition-colors border border-zinc-700">Add</button>
-        </div>
+        {!showCustomInput ? (
+          <button 
+            type="button"
+            onClick={() => setShowCustomInput(true)} 
+            className="mt-2 flex w-max items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-zinc-700 text-xs font-medium text-zinc-400 hover:text-amber-500 hover:border-amber-500/50 hover:bg-amber-500/5 transition-all focus:outline-none focus:ring-1 focus:ring-amber-500"
+          >
+            <span className="text-lg leading-none mb-0.5">+</span> Add Custom Status
+          </button>
+        ) : (
+          <div className="mt-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="text-xs font-semibold text-zinc-400">Add Custom Status</div>
+            <div className="flex gap-2">
+               <input
+                 type="text"
+                 className="flex-1 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-sm text-zinc-200 focus:outline-none focus:border-amber-500"
+                 placeholder="Custom status..."
+                 value={customInput}
+                 onChange={e => setCustomInput(e.target.value)}
+                 onKeyDown={e => {
+                   if (e.key === 'Enter') {
+                     e.preventDefault();
+                     handleAddCustom();
+                     setShowCustomInput(false);
+                   }
+                 }}
+                 autoFocus
+               />
+               <button onClick={() => { handleAddCustom(); setShowCustomInput(false); }} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm transition-colors border border-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500">Add</button>
+               <button onClick={() => { setShowCustomInput(false); setCustomInput(''); }} className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 rounded text-sm transition-colors border border-transparent hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500">Cancel</button>
+            </div>
+          </div>
+        )}
 
         <div className="flex gap-2 justify-end mt-4 border-t border-zinc-800/50 pt-4">
           <button onClick={() => setIsEditing(false)} className="text-sm text-zinc-400 hover:text-white px-3 py-1.5">Cancel</button>
