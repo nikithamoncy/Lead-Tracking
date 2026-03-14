@@ -45,7 +45,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
   };
 
   return (
-    <div className="h-full w-full overflow-y-auto bg-zinc-950 p-6 md:p-10 custom-scrollbar relative">
+    <div className="h-full w-full overflow-y-auto bg-zinc-950 p-4 md:p-6 custom-scrollbar relative">
       {/* Top left back button (mobile only) */}
       {onBack && (
         <div className="absolute top-6 left-6 z-10 md:hidden">
@@ -67,7 +67,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           {isDeleting ? '...' : <Trash2 className="w-4 h-4" />} Delete
         </button>
       </div>
-      <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-10 md:pt-0">
+      <div className="max-w-3xl mx-auto space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500 pt-10 md:pt-0">
         
         {/* Header Section */}
         <div className="space-y-4 relative">
@@ -92,7 +92,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         </div>
 
         {/* Location Section */}
-        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-6 backdrop-blur-sm">
+        <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-2xl p-4 backdrop-blur-sm">
           <div className="flex items-start gap-4">
             <div className="p-3 bg-zinc-800 rounded-xl shadow-inner">
               <MapPin className="w-6 h-6 text-zinc-300" />
@@ -110,24 +110,18 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         </div>
 
         {/* Info & Notes Section */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm shadow-lg">
-          <h3 className="text-lg font-medium text-zinc-200 mb-4 pb-4 border-b border-zinc-800/50">Info & Notes</h3>
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
+          <h3 className="text-lg font-medium text-zinc-200 mb-2 pb-2 border-b border-zinc-800/50">Info & Notes</h3>
           <EditableTextarea value={lead.Info} label="Info/Notes" onSave={async (val) => await onLeadUpdate({Info: val})} />
         </div>
 
-        {/* DM Content Section */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-6 backdrop-blur-sm shadow-lg">
-          <h3 className="text-lg font-medium text-zinc-200 mb-4 pb-4 border-b border-zinc-800/50">DM Draft / Content</h3>
-          <EditableTextarea value={lead.DM || ''} label="DM Content" onSave={async (val) => await onLeadUpdate({DM: val})} />
-        </div>
-
-        {/* Latest Post Section */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
+        {/* Social Activity Section */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
             <Instagram className="w-5 h-5 text-pink-500" />
             Social Activity
           </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-6 backdrop-blur-sm flex flex-col gap-6">
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm flex flex-col gap-4">
             <div className="flex flex-wrap gap-4 items-center">
               <EditableLinkBadge url={lead['Instagram URL'] || ''} onSave={async (val) => await onLeadUpdate({'Instagram URL': val})} />
               
@@ -139,21 +133,23 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
                 </a>
               )}
             </div>
-            
-            <div className="pt-6 border-t border-zinc-800/50">
-              <TimelineItem label="Latest Post" date={lead['Latest Post'] || ''} isActive={!!lead['Latest Post']} onSave={async (val) => await onLeadUpdate({'Latest Post': val})} />
-            </div>
           </div>
         </div>
 
+        {/* DM Content Section */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
+          <h3 className="text-lg font-medium text-zinc-200 mb-2 pb-2 border-b border-zinc-800/50">DM Draft / Content</h3>
+          <EditableTextarea value={lead.DM || ''} label="DM Content" onSave={async (val) => await onLeadUpdate({DM: val})} />
+        </div>
+
         {/* Outreach Timeline */}
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-amber-500" />
             Outreach Timeline
           </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-6 backdrop-blur-sm">
-            <div className="grid md:grid-cols-2 gap-6 relative">
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
+            <div className="grid md:grid-cols-2 gap-4 relative">
               <TimelineItem label="1st DM" date={lead['1st DM']} isActive={!!lead['1st DM']} onSave={async (val) => await onLeadUpdate({'1st DM': val})} />
               <TimelineItem label="Follow Up 1" date={lead['Folloow up 1']} isActive={!!lead['Folloow up 1']} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!lead['1st DM']} />
               <TimelineItem label="Follow Up 2" date={lead['Follow up 2']} isActive={!!lead['Follow up 2']} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!lead['Folloow up 1']} />
@@ -163,13 +159,13 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         </div>
 
         {/* Status & Response Section */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
               <Activity className="w-5 h-5 text-emerald-500" />
               Current Status
             </h3>
-            <div className={`bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-6 backdrop-blur-sm min-h-[120px] ${getStatusColors(lead.primaryStatus)}`}>
+            <div className={`bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] ${getStatusColors(lead.primaryStatus)}`}>
               <EditableMultiSelect 
                  value={lead.Status} 
                  onSave={async (val) => await onLeadUpdate({Status: val})} 
@@ -177,12 +173,12 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
               <MessageCircle className="w-5 h-5 text-blue-500" />
               Response
             </h3>
-            <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-6 backdrop-blur-sm min-h-[120px]">
+            <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px]">
               <EditableDropdown 
                 label="Responded" 
                 value={lead.Responded || ''} 
@@ -263,7 +259,7 @@ const QuickDatePickers = ({ onChange, onOpenCalendar }: { onChange: (v: string) 
 
 
 const MetricCard = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) => (
-  <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-4 flex flex-col gap-2 backdrop-blur-sm hover:bg-zinc-900/50 transition-colors">
+  <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-3 flex flex-col gap-1.5 backdrop-blur-sm hover:bg-zinc-900/50 transition-colors">
     <div className="flex items-center gap-2 text-zinc-400 text-sm font-medium">
       {icon} {label}
     </div>
@@ -348,7 +344,7 @@ const TimelineItem = ({
           setIsEditing(true);
         }
       }}
-      className={`group p-4 rounded-xl border transition-colors relative ${
+      className={`group p-3 rounded-xl border transition-colors relative ${
       disabled ? 'bg-zinc-950 border-zinc-900 opacity-40 cursor-not-allowed hidden-hover' : isActive ? 'bg-amber-500/10 border-amber-500/30 cursor-pointer hover:bg-amber-500/15' : 'bg-zinc-900 max-w border-zinc-800/50 opacity-60 cursor-pointer hover:opacity-80'
     }`}>
       <div className="flex justify-between items-center mb-2">
