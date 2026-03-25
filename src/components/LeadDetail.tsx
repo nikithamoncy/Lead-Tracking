@@ -203,7 +203,13 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
             <div className="grid md:grid-cols-2 gap-4 relative">
-              <TimelineItem label="Email 1st Date" date={getLeadField(lead, 'Email 1st date')} isActive={!!getLeadField(lead, 'Email 1st date')} onSave={async (val) => await onLeadUpdate({'Email 1st date': val})} />
+              <TimelineItem label="Email 1st Date" date={getLeadField(lead, 'Email 1st date')} isActive={!!getLeadField(lead, 'Email 1st date')} onSave={async (val) => {
+                const updates: any = { 'Email 1st date': val };
+                if (val && !getLeadField(lead, 'Responded')) {
+                  updates['Responded'] = 'Pending';
+                }
+                await onLeadUpdate(updates);
+              }} />
               <TimelineItem label="Follow Up 1" date={getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1')} isActive={!!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!getLeadField(lead, 'Email 1st date')} />
               <TimelineItem label="Follow Up 2" date={getLeadField(lead, 'Follow up 2')} isActive={!!getLeadField(lead, 'Follow up 2')} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} />
               <TimelineItem label="Final Follow Up" date={getLeadField(lead, 'Follow up final')} isActive={!!getLeadField(lead, 'Follow up final')} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!getLeadField(lead, 'Follow up 2')} />

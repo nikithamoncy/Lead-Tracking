@@ -25,8 +25,10 @@ interface LeadListProps {
   onSearchChange: (q: string) => void;
   statusFilter: string;
   onStatusFilterChange: (s: string) => void;
-  sortBy: string;
-  onSortByChange: (s: string) => void;
+  responseFilter: string;
+  onResponseFilterChange: (s: string) => void;
+  mailIdFilter: string;
+  onMailIdFilterChange: (s: string) => void;
 }
 
 export const LeadList: React.FC<LeadListProps> = ({ 
@@ -37,8 +39,10 @@ export const LeadList: React.FC<LeadListProps> = ({
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
-  sortBy,
-  onSortByChange
+  responseFilter,
+  onResponseFilterChange,
+  mailIdFilter,
+  onMailIdFilterChange
 }) => {
   // Define all possible statuses for the filter dropdown
   const allStatuses = [
@@ -76,13 +80,25 @@ export const LeadList: React.FC<LeadListProps> = ({
             ))}
           </select>
           <select
-            value={sortBy}
-            onChange={(e) => onSortByChange(e.target.value)}
-            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer min-w-[100px]"
+            value={responseFilter}
+            onChange={(e) => onResponseFilterChange(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer min-w-[80px]"
           >
-            <option value="default">Sort: Default</option>
-            <option value="response">Sort by Response</option>
-            <option value="mailId">Sort by Mail ID</option>
+            <option value="">All Responses</option>
+            <option value="None">None</option>
+            <option value="Pending">Pending</option>
+            <option value="Responded">Responded</option>
+            <option value="auto response">Auto Response</option>
+          </select>
+          <select
+            value={mailIdFilter}
+            onChange={(e) => onMailIdFilterChange(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer min-w-[80px]"
+          >
+            <option value="">All Mail IDs</option>
+            <option value="nm">nm</option>
+            <option value="nk">nk</option>
+            <option value="ndw">ndw</option>
           </select>
         </div>
       </div>

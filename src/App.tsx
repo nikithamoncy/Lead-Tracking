@@ -14,7 +14,8 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
-  const [sortBy, setSortBy] = useState('default');
+  const [responseFilter, setResponseFilter] = useState('');
+  const [mailIdFilter, setMailIdFilter] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -60,32 +61,26 @@ function App() {
   }, []);
 
   const filteredLeads = useMemo(() => {
-    let result = leads.filter(lead => 
-      (statusFilter === '' || lead.primaryStatusText === statusFilter) &&
-      (lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       lead.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    return leads.filter(lead => {
+      const matchSearch = (
+        lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lead.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      const matchStatus = statusFilter === '' || lead.primaryStatusText === statusFilter;
+      
+      const leadResponse = getLeadField(lead, 'Responded') || '';
+      let matchResponse = true;
+      if (responseFilter === 'None') matchResponse = leadResponse === '';
+      else if (responseFilter !== '') matchResponse = leadResponse.toLowerCase().includes(responseFilter.toLowerCase());
 
-    if (sortBy === 'response') {
-       result.sort((a, b) => {
-          const aRes = a.Responded || '';
-          const bRes = b.Responded || '';
-          return bRes.localeCompare(aRes);
-       });
-    } else if (sortBy === 'mailId') {
-       result.sort((a, b) => {
-          const aMail = getLeadField(a, 'Used Mail id') || '';
-          const bMail = getLeadField(b, 'Used Mail id') || '';
-          if (!aMail && bMail) return 1;
-          if (aMail && !bMail) return -1;
-          return aMail.localeCompare(bMail);
-       });
-    }
+      const leadMail = getLeadField(lead, 'Used Mail id') || '';
+      const matchMail = mailIdFilter === '' || leadMail.toLowerCase() === mailIdFilter.toLowerCase();
 
-    return result;
-  }, [leads, searchQuery, statusFilter, sortBy]);
+      return matchSearch && matchStatus && matchResponse && matchMail;
+    });
+  }, [leads, searchQuery, statusFilter, responseFilter, mailIdFilter]);
 
   const selectedLead = useMemo(() => {
     return leads.find(l => l.id === selectedId) || null;
@@ -121,8 +116,10 @@ function App() {
           onSearchChange={setSearchQuery}
           statusFilter={statusFilter}
           onStatusFilterChange={setStatusFilter}
-          sortBy={sortBy}
-          onSortByChange={setSortBy}
+          responseFilter={responseFilter}
+          onResponseFilterChange={setResponseFilter}
+          mailIdFilter={mailIdFilter}
+          onMailIdFilterChange={setMailIdFilter}
         />
       </div>
       <div className="hidden md:flex flex-1 h-full relative">
