@@ -7,10 +7,10 @@ import { LeadList } from './components/LeadList';
 import { LeadDetail } from './components/LeadDetail';
 import { Activity, ArrowLeft } from 'lucide-react';
 
-const BASE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1v9p-muUA2bh1kb_17ImBmhFFsDaREldO0d9ve6418Wc/export?format=csv&gid=';
+const getSheetUrl = (spreadsheetId: string, gid: string) => `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv&gid=${gid}`;
 
 export function CRM() {
-  const { gid } = useParams<{ gid: string }>();
+  const { spreadsheetId, gid } = useParams<{ spreadsheetId: string, gid: string }>();
   const [searchParams] = useSearchParams();
   const projectName = searchParams.get('name') || 'CRM Dashboard';
   const navigate = useNavigate();
@@ -24,13 +24,13 @@ export function CRM() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!gid) return;
+    if (!gid || !spreadsheetId) return;
 
     const fetchLeads = async () => {
       try {
         setLoading(true);
         setError(null);
-        Papa.parse(`${BASE_SHEET_URL}${gid}`, {
+        Papa.parse(getSheetUrl(spreadsheetId, gid), {
           download: true,
           header: true,
           skipEmptyLines: true,
@@ -43,7 +43,7 @@ export function CRM() {
                 id: `lead-${index}-${lead.Name?.replace(/\s+/g, '-').toLowerCase()}`,
                 primaryStatus: status,
                 primaryStatusText: text,
-                latestPostDate: parseDateString(lead['Latest Post']),
+                latestPostDate: parseDateString(lead['latest post']),
                 originalIndex: index,
               };
             });
@@ -73,7 +73,7 @@ export function CRM() {
       (statusFilter === '' || lead.primaryStatusText === statusFilter) &&
       (lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       lead.Category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       lead.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   }, [leads, searchQuery, statusFilter]);
@@ -113,7 +113,7 @@ export function CRM() {
     if (!selectedLead || !projectName) return;
     
     // Use the actual Web App URL provided by the user
-    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyqRbfo41Hbv0dzU_HcqX7sesJbwfBkhVF3YU6RokHFdiC5INA17UTXNVaPeQHSTTHZ1A/exec'; 
+    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyFEm9x5qTzIGi45ZLnzjD49DKgHu98BS36a8NU2qhU3H62ooVvrwoAnpPGHs2rBZeB/exec'; 
 
     try {
       if (WEBAPP_URL) {
@@ -139,7 +139,7 @@ export function CRM() {
             ...updated,
             primaryStatus: status,
             primaryStatusText: text,
-            latestPostDate: parseDateString(updated['Latest Post']),
+            latestPostDate: parseDateString(updated['latest post']),
           };
         }
         return l;
@@ -153,7 +153,7 @@ export function CRM() {
   const handleLeadDelete = async (leadName: string) => {
     if (!projectName) return;
     
-    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyqRbfo41Hbv0dzU_HcqX7sesJbwfBkhVF3YU6RokHFdiC5INA17UTXNVaPeQHSTTHZ1A/exec'; 
+    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyFEm9x5qTzIGi45ZLnzjD49DKgHu98BS36a8NU2qhU3H62ooVvrwoAnpPGHs2rBZeB/exec'; 
 
     try {
       if (WEBAPP_URL) {

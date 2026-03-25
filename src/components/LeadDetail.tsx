@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { UILead, FollowUpStatus } from '../types';
-import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2, ArrowLeft } from 'lucide-react';
+import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
 
 const getStatusColors = (status: FollowUpStatus | undefined) => {
   switch (status) {
@@ -78,7 +78,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           
           <div className="flex flex-wrap gap-3">
             <span className="flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-full text-sm text-zinc-400 shadow-sm cursor-default">
-              {lead.Category || 'Unknown Category'}
+              {lead.Country || 'Unknown Country'}
             </span>
           </div>
         </div>
@@ -101,9 +101,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <h3 className="text-lg font-medium text-zinc-200">Location Details</h3>
               <p className="text-zinc-400 whitespace-pre-line leading-relaxed">{lead.Address}</p>
               <div className="pt-2">
-                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-amber-500 hover:text-amber-400 transition-colors">
-                  View on Google Maps <ExternalLink className="w-3 h-3" />
-                </a>
+                {/* Map URL moved to Links section */}
               </div>
             </div>
           </div>
@@ -115,11 +113,11 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           <EditableTextarea value={lead.Info} label="Info/Notes" onSave={async (val) => await onLeadUpdate({Info: val})} />
         </div>
 
-        {/* Social Activity Section */}
+        {/* Links & Social Section */}
         <div className="space-y-3">
           <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-            <Instagram className="w-5 h-5 text-pink-500" />
-            Social Activity
+            <LinkIcon className="w-5 h-5 text-pink-500" />
+            Links & Social
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm flex flex-col gap-4">
             <div className="flex flex-wrap gap-4 items-center">
@@ -132,14 +130,59 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
                   Website
                 </a>
               )}
+              {lead['Root url'] && (
+                <a href={lead['Root url']} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <ExternalLink className="w-4 h-4 text-blue-500" />
+                  Root URL
+                </a>
+              )}
+              {lead['Map Url'] && (
+                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <MapPin className="w-4 h-4 text-emerald-500" />
+                  Map URL
+                </a>
+              )}
             </div>
           </div>
         </div>
 
-        {/* DM Content Section */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
-          <h3 className="text-lg font-medium text-zinc-200 mb-2 pb-2 border-b border-zinc-800/50">DM Draft / Content</h3>
-          <EditableTextarea value={lead.DM || ''} label="DM Content" onSave={async (val) => await onLeadUpdate({DM: val})} />
+        {/* Email Content Section */}
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg space-y-4">
+          <div className="flex justify-between items-center border-b border-zinc-800/50 pb-2 mb-2">
+            <h3 className="text-lg font-medium text-zinc-200">Email Details</h3>
+            <button 
+              onClick={async () => {
+                const text = `To: ${lead.Email || ''}\nSubject: ${lead['Email Subject'] || ''}\n\n${lead['Email Content'] || ''}`;
+                await navigator.clipboard.writeText(text);
+                alert('Email details copied to clipboard!');
+              }} 
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 rounded-lg text-sm transition-colors border border-amber-500/20"
+            >
+              <Copy className="w-4 h-4" /> Copy All
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Target Email</label>
+              <EditableTextarea value={lead.Email || ''} label="Email" onSave={async (val) => await onLeadUpdate({Email: val})} />
+            </div>
+            <div>
+               <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Used Mail ID</label>
+               <EditableTextarea value={lead['Used Mail id Category'] || ''} label="Used Mail ID" onSave={async (val) => await onLeadUpdate({'Used Mail id Category': val})} />
+            </div>
+          </div>
+          
+          <div>
+            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Email Subject</label>
+            <EditableTextarea value={lead['Email Subject'] || ''} label="Subject" onSave={async (val) => await onLeadUpdate({'Email Subject': val})} />
+          </div>
+          <div>
+            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Email Content</label>
+            <EditableTextarea value={lead['Email Content'] || ''} label="Content" onSave={async (val) => await onLeadUpdate({'Email Content': val})} />
+          </div>
         </div>
 
         {/* Outreach Timeline */}
@@ -150,8 +193,8 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
             <div className="grid md:grid-cols-2 gap-4 relative">
-              <TimelineItem label="1st DM" date={lead['1st DM']} isActive={!!lead['1st DM']} onSave={async (val) => await onLeadUpdate({'1st DM': val})} />
-              <TimelineItem label="Follow Up 1" date={lead['Folloow up 1']} isActive={!!lead['Folloow up 1']} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!lead['1st DM']} />
+              <TimelineItem label="Email 1st Date" date={lead['Email 1st date']} isActive={!!lead['Email 1st date']} onSave={async (val) => await onLeadUpdate({'Email 1st date': val})} />
+              <TimelineItem label="Follow Up 1" date={lead['Folloow up 1']} isActive={!!lead['Folloow up 1']} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!lead['Email 1st date']} />
               <TimelineItem label="Follow Up 2" date={lead['Follow up 2']} isActive={!!lead['Follow up 2']} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!lead['Folloow up 1']} />
               <TimelineItem label="Final Follow Up" date={lead['Follow up final']} isActive={!!lead['Follow up final']} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!lead['Follow up 2']} />
             </div>

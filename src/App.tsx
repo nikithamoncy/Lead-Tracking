@@ -33,7 +33,7 @@ function App() {
                 id: `lead-${index}-${lead.Name?.replace(/\s+/g, '-').toLowerCase()}`,
                 primaryStatus: status,
                 primaryStatusText: text,
-                latestPostDate: lead['Latest Post'] ? new Date(lead['Latest Post']) : null,
+                latestPostDate: lead['latest post'] ? new Date(lead['latest post']) : null,
                 originalIndex: index,
               };
             });
@@ -62,7 +62,7 @@ function App() {
       (statusFilter === '' || lead.primaryStatusText === statusFilter) &&
       (lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       lead.Category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       lead.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   }, [leads, searchQuery, statusFilter]);

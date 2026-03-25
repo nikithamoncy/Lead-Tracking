@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/crm/:gid",
+    path: "/crm/:spreadsheetId/:gid",
     element: <CRM />,
   }
 ]);

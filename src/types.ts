@@ -7,19 +7,28 @@ export interface LeadData {
   City: string;
   Country: string;
   Number: string;
-  'Map Url': string;
   Website: string;
+  'Root url': string;
+  'Email quality': string;
+  'Map Url': string;
   'Instagram URL': string;
-  Category: string;
+  Email: string;
+  'Email Subject': string;
+  'Email Content': string;
+  'Email 1st date': string;
+  'Used Mail id Category': string;
   Info: string;
+  'Insta Bio': string;
+  p1: string;
+  p2: string;
+  p3: string;
+  'latest post'?: string;
+  personalization?: string;
   Status: string;
-  '1st DM': string;
-  'Folloow up 1': string; // Note: spelling matches CSV exactly
+  'Folloow up 1': string;
   'Follow up 2': string;
   'Follow up final': string;
-  'Latest Post'?: string;
-  'Responded'?: string;
-  DM?: string;
+  Responded?: string;
 }
 
 export type FollowUpStatus = 

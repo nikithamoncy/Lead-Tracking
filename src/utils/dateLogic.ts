@@ -11,7 +11,7 @@ export function parseDateString(dateStr: string | null | undefined): Date | null
 export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; text: string } {
   const today = startOfDay(new Date());
 
-  const dm1Date = parseDateString(lead['1st DM']);
+  const email1Date = parseDateString(lead['Email 1st date']);
   const f1Date = parseDateString(lead['Folloow up 1']); // Using CSV typo
   const f2Date = parseDateString(lead['Follow up 2']);
   const finalDate = parseDateString(lead['Follow up final']);
@@ -34,8 +34,8 @@ export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; t
     return { status: 'wait_f2', text: 'Wait for Follow-up 2' };
   }
 
-  if (dm1Date) {
-    if (differenceInDays(today, dm1Date) >= 4) {
+  if (email1Date) {
+    if (differenceInDays(today, email1Date) >= 4) {
       return { status: 'due_f1', text: 'Follow-up 1 Due' };
     }
     return { status: 'wait_f1', text: 'Wait for Follow-up 1' };
