@@ -163,9 +163,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <EditableTextarea value={lead.Email || ''} label="Email" onSave={async (val) => await onLeadUpdate({Email: val})} />
             </div>
             <div>
-               <div className="flex justify-between items-center mb-1">
-                 <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Used Mail ID</label>
-               </div>
                <EditableDropdown 
                  label="Used Mail ID" 
                  value={getLeadField(lead, 'Used Mail id') || ''} 
