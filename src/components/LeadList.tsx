@@ -25,6 +25,8 @@ interface LeadListProps {
   onSearchChange: (q: string) => void;
   statusFilter: string;
   onStatusFilterChange: (s: string) => void;
+  sortBy: string;
+  onSortByChange: (s: string) => void;
 }
 
 export const LeadList: React.FC<LeadListProps> = ({ 
@@ -34,7 +36,9 @@ export const LeadList: React.FC<LeadListProps> = ({
   searchQuery, 
   onSearchChange,
   statusFilter,
-  onStatusFilterChange
+  onStatusFilterChange,
+  sortBy,
+  onSortByChange
 }) => {
   // Define all possible statuses for the filter dropdown
   const allStatuses = [
@@ -60,16 +64,25 @@ export const LeadList: React.FC<LeadListProps> = ({
           className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all shadow-inner"
         />
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-zinc-500" />
+          <Filter className="w-4 h-4 text-zinc-500 shrink-0" />
           <select
             value={statusFilter}
             onChange={(e) => onStatusFilterChange(e.target.value)}
-            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer"
+            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer min-w-[100px]"
           >
             <option value="">All Statuses</option>
             {allStatuses.map(status => (
               <option key={status} value={status}>{status}</option>
             ))}
+          </select>
+          <select
+            value={sortBy}
+            onChange={(e) => onSortByChange(e.target.value)}
+            className="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all appearance-none cursor-pointer min-w-[100px]"
+          >
+            <option value="default">Sort: Default</option>
+            <option value="response">Sort by Response</option>
+            <option value="mailId">Sort by Mail ID</option>
           </select>
         </div>
       </div>

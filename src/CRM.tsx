@@ -3,6 +3,7 @@ import Papa from 'papaparse';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import type { LeadData, UILead } from './types';
 import { checkFollowUpStatus, parseDateString } from './utils/dateLogic';
+import { getLeadField } from './utils/helpers';
 import { LeadList } from './components/LeadList';
 import { LeadDetail } from './components/LeadDetail';
 import { Activity, ArrowLeft } from 'lucide-react';
@@ -19,6 +20,7 @@ export function CRM() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [sortBy, setSortBy] = useState('default');
   const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,14 +71,32 @@ export function CRM() {
   }, [gid]);
 
   const filteredLeads = useMemo(() => {
-    return leads.filter(lead => 
+    let result = leads.filter(lead => 
       (statusFilter === '' || lead.primaryStatusText === statusFilter) &&
       (lead.Name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.City?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.Email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        lead.primaryStatusText?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-  }, [leads, searchQuery, statusFilter]);
+
+    if (sortBy === 'response') {
+       result.sort((a, b) => {
+          const aRes = a.Responded || '';
+          const bRes = b.Responded || '';
+          return bRes.localeCompare(aRes);
+       });
+    } else if (sortBy === 'mailId') {
+       result.sort((a, b) => {
+          const aMail = getLeadField(a, 'Used Mail id') || '';
+          const bMail = getLeadField(b, 'Used Mail id') || '';
+          if (!aMail && bMail) return 1;
+          if (aMail && !bMail) return -1;
+          return aMail.localeCompare(bMail);
+       });
+    }
+
+    return result;
+  }, [leads, searchQuery, statusFilter, sortBy]);
 
   const selectedLead = useMemo(() => {
     return leads.find(l => l.id === selectedId) || null;
@@ -211,6 +231,8 @@ export function CRM() {
             onSearchChange={setSearchQuery}
             statusFilter={statusFilter}
             onStatusFilterChange={setStatusFilter}
+            sortBy={sortBy}
+            onSortByChange={setSortBy}
           />
         </div>
       </div>
