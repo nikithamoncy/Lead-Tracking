@@ -130,6 +130,13 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             <div className="flex flex-wrap gap-4 items-center">
               <EditableLinkBadge url={lead['Instagram URL'] || ''} onSave={async (val) => await onLeadUpdate({'Instagram URL': val})} />
               
+              {lead['Map Url'] && (
+                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <MapPin className="w-4 h-4 text-emerald-500" />
+                  Map URL
+                </a>
+              )}
               {lead.Website && (
                 <a href={lead.Website} target="_blank" rel="noopener noreferrer" 
                    className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
@@ -142,13 +149,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
                    className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
                   <ExternalLink className="w-4 h-4 text-blue-500" />
                   Root URL
-                </a>
-              )}
-              {lead['Map Url'] && (
-                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" 
-                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
-                  <MapPin className="w-4 h-4 text-emerald-500" />
-                  Map URL
                 </a>
               )}
             </div>
