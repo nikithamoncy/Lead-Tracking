@@ -95,9 +95,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <div>
                 <div className="flex items-center justify-between mb-1 group">
                   <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Country</label>
-                  <button onClick={async () => { await navigator.clipboard.writeText(getLeadField(lead, 'Country') || ''); alert('Copied Country!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Country">
-                    <Copy className="w-3.5 h-3.5" />
-                  </button>
+                  <CopyButton text={getLeadField(lead, 'Country') || ''} title="Copy Country" />
                 </div>
                 <EditableTextarea value={getLeadField(lead, 'Country') || ''} label="Country" onSave={async (val) => await onLeadUpdate({Country: val})} />
               </div>
@@ -167,9 +165,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             <div>
               <div className="flex justify-between items-center mb-1 group">
                 <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Target Email</label>
-                <button onClick={async () => { await navigator.clipboard.writeText(lead.Email || ''); alert('Copied Target Email!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Custom Email">
-                  <Copy className="w-3.5 h-3.5" />
-                </button>
+                <CopyButton text={lead.Email || ''} title="Copy Target Email" />
               </div>
               <EditableTextarea value={lead.Email || ''} label="Email" onSave={async (val) => await onLeadUpdate({Email: val})} />
             </div>
@@ -186,18 +182,14 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           <div>
             <div className="flex justify-between items-center mb-1 group">
               <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Email Subject</label>
-              <button onClick={async () => { await navigator.clipboard.writeText(lead['Email Subject'] || ''); alert('Copied Subject!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Custom Subject">
-                <Copy className="w-3.5 h-3.5" />
-              </button>
+              <CopyButton text={lead['Email Subject'] || ''} title="Copy Subject" />
             </div>
             <EditableTextarea value={lead['Email Subject'] || ''} label="Subject" onSave={async (val) => await onLeadUpdate({'Email Subject': val})} />
           </div>
           <div>
             <div className="flex justify-between items-center mb-1 group">
               <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Email Content</label>
-              <button onClick={async () => { await navigator.clipboard.writeText(lead['Email Content'] || ''); alert('Copied Content!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Content">
-                <Copy className="w-3.5 h-3.5" />
-              </button>
+              <CopyButton text={lead['Email Content'] || ''} title="Copy Content" />
             </div>
             <EditableTextarea value={lead['Email Content'] || ''} label="Content" onSave={async (val) => await onLeadUpdate({'Email Content': val})} />
           </div>
@@ -508,6 +500,28 @@ const EditableDropdown = ({ value, label, options, onSave }: { value: string, la
 };
 
 
+
+const CopyButton = ({ text, title }: { text: string, title?: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!text) return;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button 
+      onClick={handleCopy} 
+      className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" 
+      title={title || "Copy"}
+    >
+      {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+    </button>
+  );
+};
 
 const EditableLinkBadge = ({ url, onSave }: { url: string, onSave: (val: string) => Promise<void> }) => {
   const [isEditing, setIsEditing] = useState(false);
