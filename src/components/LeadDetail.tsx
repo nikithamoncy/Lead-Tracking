@@ -109,9 +109,20 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         </div>
 
         {/* Info & Notes Section */}
-        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg">
-          <h3 className="text-lg font-medium text-zinc-200 mb-2 pb-2 border-b border-zinc-800/50">Info & Notes</h3>
-          <EditableTextarea value={lead.Info} label="Info/Notes" onSave={async (val) => await onLeadUpdate({Info: val})} />
+        <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg space-y-4">
+          <div className="border-b border-zinc-800/50 pb-2 mb-2">
+            <h3 className="text-lg font-medium text-zinc-200">Info & Notes</h3>
+          </div>
+          
+          <div>
+            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Info</label>
+            <EditableTextarea value={getLeadField(lead, 'Info') || ''} label="Info" onSave={async (val) => await onLeadUpdate({Info: val})} />
+          </div>
+          
+          <div>
+            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Personalization</label>
+            <EditableTextarea value={getLeadField(lead, 'personalization') || ''} label="Personalization" onSave={async (val) => await onLeadUpdate({personalization: val})} />
+          </div>
         </div>
 
         {/* Links & Social Section */}
