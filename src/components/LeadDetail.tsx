@@ -182,9 +182,9 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
                </div>
                <EditableDropdown 
                  label="Used Mail ID" 
-                 value={getLeadField(lead, 'Used Mail id Category') || ''} 
+                 value={getLeadField(lead, 'Used Mail id') || ''} 
                  options={['nm', 'nk', 'ndw']} 
-                 onSave={async (val) => await onLeadUpdate({'Used Mail id Category': val})} 
+                 onSave={async (val) => await onLeadUpdate({'Used Mail id': val})} 
                />
             </div>
           </div>

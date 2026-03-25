@@ -16,7 +16,7 @@ export interface LeadData {
   'Email Subject': string;
   'Email Content': string;
   'Email 1st date': string;
-  'Used Mail id Category': string;
+  'Used Mail id': string;
   Info: string;
   'Insta Bio': string;
   p1: string;
