@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { UILead, FollowUpStatus } from '../types';
 import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
+import { getLeadField } from '../utils/helpers';
 
 const getStatusColors = (status: FollowUpStatus | undefined) => {
   switch (status) {
@@ -168,7 +169,12 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
                <div className="flex justify-between items-center mb-1">
                  <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Used Mail ID</label>
                </div>
-               <EditableTextarea value={lead['Used Mail id Category'] || ''} label="Used Mail ID" onSave={async (val) => await onLeadUpdate({'Used Mail id Category': val})} />
+               <EditableDropdown 
+                 label="Used Mail ID" 
+                 value={getLeadField(lead, 'Used Mail id Category') || ''} 
+                 options={['nm', 'nk', 'ndw']} 
+                 onSave={async (val) => await onLeadUpdate({'Used Mail id Category': val})} 
+               />
             </div>
           </div>
           
@@ -200,10 +206,10 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
             <div className="grid md:grid-cols-2 gap-4 relative">
-              <TimelineItem label="Email 1st Date" date={lead['Email 1st date']} isActive={!!lead['Email 1st date']} onSave={async (val) => await onLeadUpdate({'Email 1st date': val})} />
-              <TimelineItem label="Follow Up 1" date={lead['Folloow up 1']} isActive={!!lead['Folloow up 1']} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!lead['Email 1st date']} />
-              <TimelineItem label="Follow Up 2" date={lead['Follow up 2']} isActive={!!lead['Follow up 2']} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!lead['Folloow up 1']} />
-              <TimelineItem label="Final Follow Up" date={lead['Follow up final']} isActive={!!lead['Follow up final']} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!lead['Follow up 2']} />
+              <TimelineItem label="Email 1st Date" date={getLeadField(lead, 'Email 1st date')} isActive={!!getLeadField(lead, 'Email 1st date')} onSave={async (val) => await onLeadUpdate({'Email 1st date': val})} />
+              <TimelineItem label="Follow Up 1" date={getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1')} isActive={!!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!getLeadField(lead, 'Email 1st date')} />
+              <TimelineItem label="Follow Up 2" date={getLeadField(lead, 'Follow up 2')} isActive={!!getLeadField(lead, 'Follow up 2')} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} />
+              <TimelineItem label="Final Follow Up" date={getLeadField(lead, 'Follow up final')} isActive={!!getLeadField(lead, 'Follow up final')} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!getLeadField(lead, 'Follow up 2')} />
             </div>
           </div>
         </div>

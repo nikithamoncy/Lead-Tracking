@@ -1,20 +1,21 @@
 import { parse, isValid, startOfDay, differenceInDays } from 'date-fns';
 import type { LeadData, FollowUpStatus } from '../types';
+import { getLeadField } from './helpers';
 
 export function parseDateString(dateStr: string | null | undefined): Date | null {
   if (!dateStr || dateStr.trim() === '') return null;
-  // Parse MM/DD/YYYY or M/D/YYYY (Month Day Year - from Google Sheet)
-  const parsed = parse(dateStr.trim(), 'M/d/yyyy', new Date());
+  // Parse DD/MM/YYYY or d/M/yyyy (Day Month Year - from Google Sheet)
+  const parsed = parse(dateStr.trim(), 'd/M/yyyy', new Date());
   return isValid(parsed) ? parsed : null;
 }
 
 export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; text: string } {
   const today = startOfDay(new Date());
 
-  const email1Date = parseDateString(lead['Email 1st date']);
-  const f1Date = parseDateString(lead['Folloow up 1']); // Using CSV typo
-  const f2Date = parseDateString(lead['Follow up 2']);
-  const finalDate = parseDateString(lead['Follow up final']);
+  const email1Date = parseDateString(getLeadField(lead, 'Email 1st date'));
+  const f1Date = parseDateString(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'));
+  const f2Date = parseDateString(getLeadField(lead, 'Follow up 2'));
+  const finalDate = parseDateString(getLeadField(lead, 'Follow up final'));
 
   if (finalDate) {
     return { status: 'completed', text: 'Finished' };
