@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { UILead, FollowUpStatus } from '../types';
+import type { UILead } from '../types';
 import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
 import { getLeadField } from '../utils/helpers';
 
