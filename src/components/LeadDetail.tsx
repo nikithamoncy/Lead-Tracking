@@ -84,11 +84,22 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             <div className="p-3 bg-zinc-800 rounded-xl shadow-inner">
               <MapPin className="w-6 h-6 text-zinc-300" />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-3 w-full">
               <h3 className="text-lg font-medium text-zinc-200">Location Details</h3>
-              <p className="text-zinc-400 whitespace-pre-line leading-relaxed">{lead.Address}</p>
-              <div className="pt-2">
-                {/* Map URL moved to Links section */}
+              <div>
+                <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Address</label>
+                <div className="mt-1">
+                  <EditableTextarea value={getLeadField(lead, 'Address') || ''} label="Address" onSave={async (val) => await onLeadUpdate({Address: val})} />
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center justify-between mb-1 group">
+                  <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Country</label>
+                  <button onClick={async () => { await navigator.clipboard.writeText(getLeadField(lead, 'Country') || ''); alert('Copied Country!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Country">
+                    <Copy className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <EditableTextarea value={getLeadField(lead, 'Country') || ''} label="Country" onSave={async (val) => await onLeadUpdate({Country: val})} />
               </div>
             </div>
           </div>
