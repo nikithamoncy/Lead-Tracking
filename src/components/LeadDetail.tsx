@@ -152,35 +152,42 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg space-y-4">
           <div className="flex justify-between items-center border-b border-zinc-800/50 pb-2 mb-2">
             <h3 className="text-lg font-medium text-zinc-200">Email Details</h3>
-            <button 
-              onClick={async () => {
-                const text = `To: ${lead.Email || ''}\nSubject: ${lead['Email Subject'] || ''}\n\n${lead['Email Content'] || ''}`;
-                await navigator.clipboard.writeText(text);
-                alert('Email details copied to clipboard!');
-              }} 
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 rounded-lg text-sm transition-colors border border-amber-500/20"
-            >
-              <Copy className="w-4 h-4" /> Copy All
-            </button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Target Email</label>
+              <div className="flex justify-between items-center mb-1 group">
+                <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Target Email</label>
+                <button onClick={async () => { await navigator.clipboard.writeText(lead.Email || ''); alert('Copied Target Email!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Custom Email">
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              </div>
               <EditableTextarea value={lead.Email || ''} label="Email" onSave={async (val) => await onLeadUpdate({Email: val})} />
             </div>
             <div>
-               <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Used Mail ID</label>
+               <div className="flex justify-between items-center mb-1">
+                 <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Used Mail ID</label>
+               </div>
                <EditableTextarea value={lead['Used Mail id Category'] || ''} label="Used Mail ID" onSave={async (val) => await onLeadUpdate({'Used Mail id Category': val})} />
             </div>
           </div>
           
           <div>
-            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Email Subject</label>
+            <div className="flex justify-between items-center mb-1 group">
+              <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Email Subject</label>
+              <button onClick={async () => { await navigator.clipboard.writeText(lead['Email Subject'] || ''); alert('Copied Subject!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Custom Subject">
+                <Copy className="w-3.5 h-3.5" />
+              </button>
+            </div>
             <EditableTextarea value={lead['Email Subject'] || ''} label="Subject" onSave={async (val) => await onLeadUpdate({'Email Subject': val})} />
           </div>
           <div>
-            <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider">Email Content</label>
+            <div className="flex justify-between items-center mb-1 group">
+              <label className="text-xs uppercase font-bold text-zinc-500 tracking-wider group-hover:text-amber-500 transition-colors">Email Content</label>
+              <button onClick={async () => { await navigator.clipboard.writeText(lead['Email Content'] || ''); alert('Copied Content!'); }} className="text-zinc-500 hover:text-amber-500 p-1 bg-zinc-800/50 hover:bg-zinc-800 rounded transition-colors" title="Copy Content">
+                <Copy className="w-3.5 h-3.5" />
+              </button>
+            </div>
             <EditableTextarea value={lead['Email Content'] || ''} label="Content" onSave={async (val) => await onLeadUpdate({'Email Content': val})} />
           </div>
         </div>
@@ -237,45 +244,45 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
   );
 };
 
-// Helper function to convert M/D/YYYY to YYYY-MM-DD for native date input
+// Helper function to convert D/M/YYYY to YYYY-MM-DD for native date input
 const formatDateForInput = (dateStr: string | undefined) => {
   if (!dateStr) return '';
   const parts = dateStr.split('/');
   if (parts.length === 3) {
-    // Sheet is M/D/YYYY
-    const month = parts[0].padStart(2, '0');
-    const day = parts[1].padStart(2, '0');
+    // Sheet is D/M/YYYY
+    const day = parts[0].padStart(2, '0');
+    const month = parts[1].padStart(2, '0');
     const year = parts[2];
     return `${year}-${month}-${day}`;
   }
   return dateStr;
 };
 
-// Helper function to convert YYYY-MM-DD from input back to M/D/YYYY for CSV/AppLogic bridging
+// Helper function to convert YYYY-MM-DD from input back to D/M/YYYY for CSV/AppLogic bridging
 const parseDateFromInput = (dateStr: string) => {
   if (!dateStr) return '';
   const parts = dateStr.split('-');
   if (parts.length === 3) {
-    return `${parseInt(parts[1], 10)}/${parseInt(parts[2], 10)}/${parts[0]}`;
+    return `${parseInt(parts[2], 10)}/${parseInt(parts[1], 10)}/${parts[0]}`;
   }
   return dateStr;
 };
 
-// Returns M/D/YYYY for the Quick Pickers
+// Returns D/M/YYYY for the Quick Pickers
 const getRelativeDateStr = (daysAgo: number) => {
   const d = new Date();
   d.setDate(d.getDate() - daysAgo);
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
+  return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 }
 
-// Display format on UI is strictly DD/MM/YYYY
+// Display format on UI 
 const displayDate = (dateStr: string | undefined) => {
   if (!dateStr) return '';
   const parts = dateStr.split('/');
   if (parts.length === 3) {
-    // M/D/YYYY incoming -> DD/MM/YYYY outgoing
-    const month = parts[0].padStart(2, '0');
-    const day = parts[1].padStart(2, '0');
+    // D/M/YYYY incoming -> DD/MM/YYYY outgoing
+    const day = parts[0].padStart(2, '0');
+    const month = parts[1].padStart(2, '0');
     const year = parts[2];
     return `${day}/${month}/${year}`;
   }
