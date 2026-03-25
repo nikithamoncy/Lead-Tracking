@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
 import type { UILead, FollowUpStatus } from '../types';
-import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, Activity, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
+import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
 import { getLeadField } from '../utils/helpers';
-
-const getStatusColors = (status: FollowUpStatus | undefined) => {
-  switch (status) {
-    case 'uncontacted': return 'text-zinc-400 border-zinc-700 bg-zinc-800/50';
-    case 'wait_f1': return 'text-emerald-600 border-emerald-800/50 bg-emerald-900/10'; // dull green
-    case 'due_f1': return 'text-emerald-400 border-emerald-500/50 bg-emerald-500/20'; // bright green
-    case 'wait_f2': return 'text-amber-600 border-amber-800/50 bg-amber-900/10'; // dull yellow
-    case 'due_f2': return 'text-amber-400 border-amber-500/50 bg-amber-500/20'; // bright yellow
-    case 'wait_final': return 'text-rose-600 border-rose-800/50 bg-rose-900/10'; // dull red
-    case 'due_final': return 'text-rose-400 border-rose-500/50 bg-rose-500/20'; // bright red
-    case 'completed': return 'text-blue-400 border-blue-500/50 bg-blue-500/20'; // completed
-    default: return 'text-zinc-400 border-zinc-700 bg-zinc-800/50';
-  }
-};
 
 interface LeadDetailProps {
   lead: UILead | null;
@@ -225,34 +211,19 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </div>
         </div>
 
-        {/* Status & Response Section */}
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-emerald-500" />
-              Current Status
-            </h3>
-            <div className={`bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] ${getStatusColors(lead.primaryStatus)}`}>
-              <EditableMultiSelect 
-                 value={lead.Status} 
-                 onSave={async (val) => await onLeadUpdate({Status: val})} 
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-blue-500" />
-              Response
-            </h3>
-            <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px]">
-              <EditableDropdown 
-                label="Responded" 
-                value={lead.Responded || ''} 
-                options={['Pending', 'Responded']} 
-                onSave={async (val) => await onLeadUpdate({Responded: val})} 
-              />
-            </div>
+        {/* Response Section */}
+        <div className="max-w-sm space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-blue-500" />
+            Response
+          </h3>
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px]">
+            <EditableDropdown 
+              label="Responded" 
+              value={getLeadField(lead, 'Responded') || ''} 
+              options={['Pending', 'Responded', 'auto response']} 
+              onSave={async (val) => await onLeadUpdate({Responded: val})} 
+            />
           </div>
         </div>
 
@@ -528,144 +499,7 @@ const EditableDropdown = ({ value, label, options, onSave }: { value: string, la
   );
 };
 
-const EditableMultiSelect = ({ value, onSave }: { value: string, onSave: (val: string) => Promise<void> }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [customInput, setCustomInput] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [showCustomInput, setShowCustomInput] = useState(false);
 
-  const OPTIONS = ['only DM', 'Comment+DM', 'Follow up 1', 'Follow up 2', 'Follow up final'];
-  const currentOptions = value ? value.split(',').map(s => s.trim()).filter(Boolean) : [];
-
-  const handleEditClick = () => {
-    setSelected(currentOptions);
-    setIsEditing(true);
-    setShowCustomInput(false);
-  };
-
-  const toggleOption = (opt: string) => {
-    setSelected(prev => prev.includes(opt) ? prev.filter(o => o !== opt) : [...prev, opt]);
-  };
-
-  const handleAddCustom = () => {
-    const trimmed = customInput.trim();
-    if (trimmed && !selected.includes(trimmed)) {
-      setSelected(prev => [...prev, trimmed]);
-      setCustomInput('');
-    }
-  };
-
-  const handleRemoveOption = async (e: React.MouseEvent, opt: string) => {
-    e.stopPropagation();
-    setIsSaving(true);
-    const newVal = currentOptions.filter(o => o !== opt).join(', ');
-    await onSave(newVal);
-    setIsSaving(false);
-  };
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    // Include pending custom input if any
-    const trimmed = customInput.trim();
-    let finalSelected = selected;
-    if (trimmed && !selected.includes(trimmed)) {
-      finalSelected = [...selected, trimmed];
-    }
-    
-    const finalVal = finalSelected.join(', ');
-    if (finalVal !== value) await onSave(finalVal);
-    setIsEditing(false);
-    setIsSaving(false);
-  };
-
-  // Extract all unique options to display as chips, including default + custom ones currently selected
-  const displayOptions = Array.from(new Set([...OPTIONS, ...selected]));
-
-  if (isEditing) {
-    return (
-      <div className="flex flex-col gap-3 p-4 bg-zinc-900 border border-amber-500/30 rounded-xl relative z-20 shadow-xl w-full">
-        <div className="flex justify-between items-center">
-          <label className="text-xs font-semibold text-zinc-400">Select Statuses</label>
-          <div className="flex gap-2">
-            <button onClick={() => setIsEditing(false)} className="text-xs text-zinc-400 hover:text-white px-2 py-1 transition-colors">Cancel</button>
-            <button onClick={handleSave} disabled={isSaving} className="text-xs bg-amber-500 text-zinc-950 px-3 py-1 rounded font-medium flex items-center gap-2 hover:bg-amber-400 transition-colors">
-              {isSaving ? '...' : 'Save'}
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {displayOptions.map(opt => (
-            <button
-              key={opt}
-              onClick={() => toggleOption(opt)}
-              className={`px-3 py-1 text-sm rounded-full border transition-colors ${
-                selected.includes(opt) ? 'bg-amber-500/20 border-amber-500/50 text-amber-400' : 'bg-zinc-950 border-zinc-700 text-zinc-400 hover:border-zinc-500'
-              }`}
-            >
-              {opt}
-            </button>
-          ))}
-        </div>
-        
-        {!showCustomInput ? (
-          <button 
-            type="button"
-            onClick={() => setShowCustomInput(true)} 
-            className="mt-2 flex w-max items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-zinc-700 text-xs font-medium text-zinc-400 hover:text-amber-500 hover:border-amber-500/50 hover:bg-amber-500/5 transition-all focus:outline-none focus:ring-1 focus:ring-amber-500"
-          >
-            <span className="text-lg leading-none mb-0.5">+</span> Add Custom Status
-          </button>
-        ) : (
-          <div className="mt-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-            <div className="text-xs font-semibold text-zinc-400">Add Custom Status</div>
-            <div className="flex gap-2">
-               <input
-                 type="text"
-                 className="flex-1 bg-zinc-950 border border-zinc-700 rounded px-2 py-1 text-sm text-zinc-200 focus:outline-none focus:border-amber-500"
-                 placeholder="Custom status..."
-                 value={customInput}
-                 onChange={e => setCustomInput(e.target.value)}
-                 onKeyDown={e => {
-                   if (e.key === 'Enter') {
-                     e.preventDefault();
-                     handleSave();
-                   }
-                 }}
-                 autoFocus
-               />
-               <button onClick={() => { handleAddCustom(); setShowCustomInput(false); }} className="px-3 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm transition-colors border border-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500">Add</button>
-               <button onClick={() => { setShowCustomInput(false); setCustomInput(''); }} className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 rounded text-sm transition-colors border border-transparent hover:border-zinc-700 focus:outline-none focus:ring-1 focus:ring-amber-500">Cancel</button>
-            </div>
-          </div>
-        )}
-
-      </div>
-    );
-  }
-
-  return (
-    <div 
-      onClick={handleEditClick}
-      className="group relative flex flex-wrap items-center gap-2 cursor-pointer hover:bg-zinc-900/50 p-2 -m-2 rounded transition-colors min-h-[40px]"
-    >
-      {currentOptions.length > 0 ? currentOptions.map(opt => (
-        <span key={opt} className="px-3 py-1 bg-zinc-800 border border-zinc-700 rounded-full text-sm font-medium text-zinc-200 flex items-center gap-1 group/badge hover:border-zinc-500 transition-colors">
-          {opt}
-          <button 
-            disabled={isSaving}
-            onClick={(e) => handleRemoveOption(e, opt)} 
-            className="p-0.5 ml-1 rounded-full hover:bg-zinc-700 text-zinc-500 hover:text-rose-400 transition-colors"
-          >
-            <X className="w-3 h-3" />
-          </button>
-        </span>
-      )) : (
-        <span className="font-semibold text-zinc-500">Uncontacted (Click to Add)</span>
-      )}
-    </div>
-  );
-};
 
 const EditableLinkBadge = ({ url, onSave }: { url: string, onSave: (val: string) => Promise<void> }) => {
   const [isEditing, setIsEditing] = useState(false);
