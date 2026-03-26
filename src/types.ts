@@ -27,6 +27,8 @@ export interface LeadData {
   Status: string;
   'Folloow up 1': string;
   'Follow up 2': string;
+  'Follow up 3'?: string;
+  'Follow up 4'?: string;
   'Follow up final': string;
   Responded?: string;
 }
@@ -35,6 +37,8 @@ export type FollowUpStatus =
   | 'uncontacted' 
   | 'wait_f1' | 'due_f1' 
   | 'wait_f2' | 'due_f2' 
+  | 'wait_f3' | 'due_f3' 
+  | 'wait_f4' | 'due_f4' 
   | 'wait_final' | 'due_final' 
   | 'completed';
 
