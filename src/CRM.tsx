@@ -209,7 +209,7 @@ export function CRM() {
                 <h2 className="font-semibold text-zinc-100 truncate">{projectName}</h2>
             </div>
             <div className="text-xs font-mono text-zinc-500 bg-zinc-950 px-2 py-1 rounded inline-block border border-zinc-800/50">
-                {leads.length} leads
+                {filteredLeads.length} leads
             </div>
         </div>
 
