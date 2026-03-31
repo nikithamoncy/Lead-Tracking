@@ -10,6 +10,14 @@ const getStatusColors = (status: FollowUpStatus | undefined) => {
     case 'due_f1': return 'text-emerald-400 border-emerald-500/50 bg-emerald-500/20'; // bright green
     case 'wait_f2': return 'text-amber-600 border-amber-800/50 bg-amber-900/10'; // dull yellow
     case 'due_f2': return 'text-amber-400 border-amber-500/50 bg-amber-500/20'; // bright yellow
+    case 'wait_f3': return 'text-purple-600 border-purple-800/50 bg-purple-900/10';
+    case 'due_f3': return 'text-purple-400 border-purple-500/50 bg-purple-500/20';
+    case 'wait_f4': return 'text-teal-600 border-teal-800/50 bg-teal-900/10';
+    case 'due_f4': return 'text-teal-400 border-teal-500/50 bg-teal-500/20';
+    case 'wait_f5': return 'text-orange-600 border-orange-800/50 bg-orange-900/10';
+    case 'due_f5': return 'text-orange-400 border-orange-500/50 bg-orange-500/20';
+    case 'wait_f6': return 'text-cyan-600 border-cyan-800/50 bg-cyan-900/10';
+    case 'due_f6': return 'text-cyan-400 border-cyan-500/50 bg-cyan-500/20';
     case 'wait_final': return 'text-rose-600 border-rose-800/50 bg-rose-900/10'; // dull red
     case 'due_final': return 'text-rose-400 border-rose-500/50 bg-rose-500/20'; // bright red
     case 'completed': return 'text-blue-400 border-blue-500/50 bg-blue-500/20'; // completed
@@ -47,14 +55,22 @@ export const LeadList: React.FC<LeadListProps> = ({
   // Define all possible statuses for the filter dropdown
   const allStatuses = [
     'Add Instagram',
+    'Ready to Pitch',
+    'Wait for Follow-up 1',
     'Follow-up 1 Due',
+    'Wait for Follow-up 2',
     'Follow-up 2 Due',
+    'Wait for Follow-up 3',
+    'Follow-up 3 Due',
+    'Wait for Follow-up 4',
+    'Follow-up 4 Due',
+    'Wait for Follow-up 5',
+    'Follow-up 5 Due',
+    'Wait for Follow-up 6',
+    'Follow-up 6 Due',
+    'Wait for Final Follow-up',
     'Final Follow-up Due',
     'Finished',
-    'Ready to Pitch',
-    'Wait for Final',
-    'Wait for Follow-up 1',
-    'Wait for Follow-up 2',
   ];
 
   return (
@@ -89,6 +105,7 @@ export const LeadList: React.FC<LeadListProps> = ({
             <option value="Pending">Pending</option>
             <option value="Responded">Responded</option>
             <option value="auto response">Auto Response</option>
+            <option value="Stop">Stop</option>
           </select>
           <select
             value={mailIdFilter}
