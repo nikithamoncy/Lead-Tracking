@@ -41,8 +41,6 @@ export type FollowUpStatus =
   | 'wait_f2' | 'due_f2' 
   | 'wait_f3' | 'due_f3' 
   | 'wait_f4' | 'due_f4' 
-  | 'wait_f5' | 'due_f5' 
-  | 'wait_f6' | 'due_f6' 
   | 'wait_final' | 'due_final' 
   | 'completed'
   | 'stopped';

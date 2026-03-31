@@ -214,9 +214,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <TimelineItem label="Follow Up 2" date={getLeadField(lead, 'Follow up 2')} isActive={!!getLeadField(lead, 'Follow up 2')} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} />
               <TimelineItem label="Follow Up 3" date={getLeadField(lead, 'Follow up 3')} isActive={!!getLeadField(lead, 'Follow up 3')} onSave={async (val) => await onLeadUpdate({'Follow up 3': val})} disabled={!getLeadField(lead, 'Follow up 2')} />
               <TimelineItem label="Follow Up 4" date={getLeadField(lead, 'Follow up 4')} isActive={!!getLeadField(lead, 'Follow up 4')} onSave={async (val) => await onLeadUpdate({'Follow up 4': val})} disabled={!getLeadField(lead, 'Follow up 3')} />
-              <TimelineItem label="Follow Up 5" date={getLeadField(lead, 'Follow up 5')} isActive={!!getLeadField(lead, 'Follow up 5')} onSave={async (val) => await onLeadUpdate({'Follow up 5': val})} disabled={!getLeadField(lead, 'Follow up 4')} />
-              <TimelineItem label="Follow Up 6" date={getLeadField(lead, 'Follow up 6')} isActive={!!getLeadField(lead, 'Follow up 6')} onSave={async (val) => await onLeadUpdate({'Follow up 6': val})} disabled={!getLeadField(lead, 'Follow up 5')} />
-              <TimelineItem label="Follow Up Final" date={getLeadField(lead, 'Follow up final')} isActive={!!getLeadField(lead, 'Follow up final')} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!getLeadField(lead, 'Follow up 6')} />
+              <TimelineItem label="Follow Up 5 (Final)" date={getLeadField(lead, 'Follow up final')} isActive={!!getLeadField(lead, 'Follow up final')} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!getLeadField(lead, 'Follow up 4')} />
             </div>
           </div>
         </div>

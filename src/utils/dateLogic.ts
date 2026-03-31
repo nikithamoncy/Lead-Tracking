@@ -22,51 +22,35 @@ export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; t
   const f2Date = parseDateString(getLeadField(lead, 'Follow up 2'));
   const f3Date = parseDateString(getLeadField(lead, 'Follow up 3'));
   const f4Date = parseDateString(getLeadField(lead, 'Follow up 4'));
-  const f5Date = parseDateString(getLeadField(lead, 'Follow up 5'));
-  const f6Date = parseDateString(getLeadField(lead, 'Follow up 6'));
   const finalDate = parseDateString(getLeadField(lead, 'Follow up final'));
 
   if (finalDate) {
     return { status: 'completed', text: 'Finished' };
   }
 
-  if (f6Date) {
-    if (differenceInDays(today, f6Date) >= 7) {
-      return { status: 'due_final', text: 'Final Follow-up Due' };
-    }
-    return { status: 'wait_final', text: 'Wait for Final Follow-up' };
-  }
-
-  if (f5Date) {
-    if (differenceInDays(today, f5Date) >= 7) {
-      return { status: 'due_f6', text: 'Follow-up 6 Due' };
-    }
-    return { status: 'wait_f6', text: 'Wait for Follow-up 6' };
-  }
-
   if (f4Date) {
-    if (differenceInDays(today, f4Date) >= 7) {
-      return { status: 'due_f5', text: 'Follow-up 5 Due' };
+    if (differenceInDays(today, f4Date) >= 21) {
+      return { status: 'due_final', text: 'Follow-up 5 (Final) Due' };
     }
-    return { status: 'wait_f5', text: 'Wait for Follow-up 5' };
+    return { status: 'wait_final', text: 'Wait for Follow-up 5 (Final)' };
   }
 
   if (f3Date) {
-    if (differenceInDays(today, f3Date) >= 5) {
+    if (differenceInDays(today, f3Date) >= 14) {
       return { status: 'due_f4', text: 'Follow-up 4 Due' };
     }
     return { status: 'wait_f4', text: 'Wait for Follow-up 4' };
   }
 
   if (f2Date) {
-    if (differenceInDays(today, f2Date) >= 4) {
+    if (differenceInDays(today, f2Date) >= 9) {
       return { status: 'due_f3', text: 'Follow-up 3 Due' };
     }
     return { status: 'wait_f3', text: 'Wait for Follow-up 3' };
   }
 
   if (f1Date) {
-    if (differenceInDays(today, f1Date) >= 3) {
+    if (differenceInDays(today, f1Date) >= 5) {
       return { status: 'due_f2', text: 'Follow-up 2 Due' };
     }
     return { status: 'wait_f2', text: 'Wait for Follow-up 2' };

@@ -14,10 +14,7 @@ const getStatusColors = (status: FollowUpStatus | undefined) => {
     case 'due_f3': return 'text-purple-400 border-purple-500/50 bg-purple-500/20';
     case 'wait_f4': return 'text-teal-600 border-teal-800/50 bg-teal-900/10';
     case 'due_f4': return 'text-teal-400 border-teal-500/50 bg-teal-500/20';
-    case 'wait_f5': return 'text-orange-600 border-orange-800/50 bg-orange-900/10';
-    case 'due_f5': return 'text-orange-400 border-orange-500/50 bg-orange-500/20';
-    case 'wait_f6': return 'text-cyan-600 border-cyan-800/50 bg-cyan-900/10';
-    case 'due_f6': return 'text-cyan-400 border-cyan-500/50 bg-cyan-500/20';
+
     case 'wait_final': return 'text-rose-600 border-rose-800/50 bg-rose-900/10'; // dull red
     case 'due_final': return 'text-rose-400 border-rose-500/50 bg-rose-500/20'; // bright red
     case 'completed': return 'text-blue-400 border-blue-500/50 bg-blue-500/20'; // completed
@@ -65,12 +62,8 @@ export const LeadList: React.FC<LeadListProps> = ({
     'Follow-up 3 Due',
     'Wait for Follow-up 4',
     'Follow-up 4 Due',
-    'Wait for Follow-up 5',
-    'Follow-up 5 Due',
-    'Wait for Follow-up 6',
-    'Follow-up 6 Due',
-    'Wait for Final Follow-up',
-    'Final Follow-up Due',
+    'Wait for Follow-up 5 (Final)',
+    'Follow-up 5 (Final) Due',
     'Finished',
     'Stopped',
   ];
