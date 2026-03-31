@@ -12,6 +12,11 @@ export function parseDateString(dateStr: string | null | undefined): Date | null
 export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; text: string } {
   const today = startOfDay(new Date());
 
+  const responded = getLeadField(lead, 'Responded');
+  if (responded?.trim() === 'Stop') {
+    return { status: 'stopped', text: 'Stopped' };
+  }
+
   const email1Date = parseDateString(getLeadField(lead, 'Email 1st date'));
   const f1Date = parseDateString(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'));
   const f2Date = parseDateString(getLeadField(lead, 'Follow up 2'));

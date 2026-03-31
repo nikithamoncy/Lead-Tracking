@@ -21,6 +21,7 @@ const getStatusColors = (status: FollowUpStatus | undefined) => {
     case 'wait_final': return 'text-rose-600 border-rose-800/50 bg-rose-900/10'; // dull red
     case 'due_final': return 'text-rose-400 border-rose-500/50 bg-rose-500/20'; // bright red
     case 'completed': return 'text-blue-400 border-blue-500/50 bg-blue-500/20'; // completed
+    case 'stopped': return 'text-rose-500 border-rose-500/50 bg-rose-900/40 font-bold'; // distinct red
     default: return 'text-zinc-400 border-zinc-700 bg-zinc-800/50';
   }
 };
@@ -71,6 +72,7 @@ export const LeadList: React.FC<LeadListProps> = ({
     'Wait for Final Follow-up',
     'Final Follow-up Due',
     'Finished',
+    'Stopped',
   ];
 
   return (
@@ -123,6 +125,7 @@ export const LeadList: React.FC<LeadListProps> = ({
         {leads.map((lead) => {
           const isSelected = selectedId === lead.id;
           const isResponded = lead.Responded?.trim() === 'Responded';
+          const isStopped = lead.primaryStatus === 'stopped';
 
           let cardStyle = "bg-transparent border border-transparent hover:bg-zinc-800 hover:border-zinc-700";
           
@@ -130,6 +133,11 @@ export const LeadList: React.FC<LeadListProps> = ({
              cardStyle = isSelected 
                ? "bg-emerald-500/20 border border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.15)]" 
                : "bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/15";
+          } else if (isStopped) {
+             cardStyle = "bg-rose-500/20 border border-rose-500/30 shadow-[0_0_15px_rgba(244,63,94,0.1)] hover:bg-rose-500/25";
+             if (isSelected) {
+               cardStyle += " border-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.25)]";
+             }
           } else if (isSelected) {
              cardStyle = "bg-amber-500/10 border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]";
           }
@@ -147,6 +155,7 @@ export const LeadList: React.FC<LeadListProps> = ({
                 <span className={cn(
                   "font-medium truncate",
                   isResponded ? (isSelected ? "text-emerald-300" : "text-emerald-400 group-hover:text-emerald-300") :
+                  isStopped ? (isSelected ? "text-rose-300 font-bold" : "text-rose-400 group-hover:text-rose-300 font-bold") :
                   isSelected ? "text-amber-400" : "text-zinc-200 group-hover:text-zinc-100"
                 )}>
                   {lead.originalIndex + 1}. {lead.Name || 'Unknown Gym'}

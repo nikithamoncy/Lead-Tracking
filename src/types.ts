@@ -44,7 +44,8 @@ export type FollowUpStatus =
   | 'wait_f5' | 'due_f5' 
   | 'wait_f6' | 'due_f6' 
   | 'wait_final' | 'due_final' 
-  | 'completed';
+  | 'completed'
+  | 'stopped';
 
 export interface UILead extends LeadData {
   id: string;
