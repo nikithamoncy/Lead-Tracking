@@ -12,6 +12,7 @@ interface LeadDetailProps {
 
 export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLeadDelete, onBack }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   if (!lead) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-zinc-500 bg-zinc-950">
@@ -31,6 +32,29 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
     }
   };
 
+  const handleCopyRow = () => {
+    if (!lead) return;
+    const fieldsToCopy = [
+      'Name', 'Total Score', 'Review Count', 'Image Count', 'Address', 'City', 'Country', 'Number',
+      'Website', 'Root url', 'Email quality', 'Map Url', 'Instagram URL', 'Email', 'Email Subject',
+      'Email Content', 'Email 1st date', 'Used Mail id', 'Info', 'Insta Bio', 'p1', 'p2', 'p3',
+      'latest post', 'personalization', 'Status', 'Folloow up 1', 'Follow up 2', 'Follow up 3',
+      'Follow up 4', 'Follow up 5', 'Follow up 6', 'Follow up final', 'Responded'
+    ];
+    
+    let text = '';
+    fieldsToCopy.forEach(field => {
+      const value = lead[field as keyof UILead];
+      if (value !== undefined && value !== null && value !== '') {
+        text += `${field} : ${value}\n`;
+      }
+    });
+
+    navigator.clipboard.writeText(text.trim());
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   return (
     <div className="h-full w-full overflow-y-auto bg-zinc-950 p-4 md:p-6 custom-scrollbar relative">
       {/* Top left back button (mobile only) */}
@@ -46,6 +70,12 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
       )}
       {/* Top right action buttons */}
       <div className="absolute top-6 right-6 flex items-center gap-2 z-10">
+        <button 
+          onClick={handleCopyRow}
+          className="flex items-center gap-2 px-3 py-1.5 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 rounded-lg text-sm text-zinc-300 transition-colors backdrop-blur-sm shadow-md"
+        >
+          {isCopied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />} {isCopied ? 'Copied!' : 'Copy Row'}
+        </button>
         <button 
           onClick={handleDelete}
           disabled={isDeleting}
