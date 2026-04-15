@@ -34,19 +34,18 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
 
   const handleCopyRow = () => {
     if (!lead) return;
-    const fieldsToCopy = [
-      'Name', 'Total Score', 'Review Count', 'Image Count', 'Address', 'City', 'Country', 'Number',
-      'Website', 'Root url', 'Email quality', 'Map Url', 'Instagram URL', 'Email', 'Email Subject',
-      'Email Content', 'Email 1st date', 'Used Mail id', 'Info', 'Insta Bio', 'p1', 'p2', 'p3',
-      'latest post', 'personalization', 'Status', 'Folloow up 1', 'Follow up 2', 'Follow up 3',
-      'Follow up 4', 'Follow up 5', 'Follow up 6', 'Follow up final', 'Responded'
-    ];
+    
+    // Properties to ignore (internal UI state, not from Google Sheet)
+    const ignoreProps = ['id', 'primaryStatus', 'primaryStatusText', 'latestPostDate', 'originalIndex'];
     
     let text = '';
-    fieldsToCopy.forEach(field => {
-      const value = lead[field as keyof UILead];
-      if (value !== undefined && value !== null && value !== '') {
-        text += `${field} : ${value}\n`;
+    
+    // Iterate through all keys actually present in the lead object dynamically
+    Object.keys(lead).forEach(key => {
+      if (!ignoreProps.includes(key)) {
+        const value = (lead as any)[key];
+        // Include field even if empty to match Google Sheet structure exactly
+        text += `${key} : ${value !== undefined && value !== null ? value : ''}\n`;
       }
     });
 
