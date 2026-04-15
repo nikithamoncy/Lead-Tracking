@@ -66,5 +66,10 @@ export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; t
   if (!lead['Instagram URL'] || lead['Instagram URL'].trim() === '') {
     return { status: 'uncontacted', text: 'Add Instagram' };
   }
+
+  if (!lead['Email Subject']?.trim() || !lead['Email Content']?.trim()) {
+    return { status: 'uncontacted', text: 'Add Email' };
+  }
+
   return { status: 'uncontacted', text: 'Ready to Pitch' };
 }

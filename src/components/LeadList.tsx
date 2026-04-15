@@ -53,6 +53,7 @@ export const LeadList: React.FC<LeadListProps> = ({
   // Define all possible statuses for the filter dropdown
   const allStatuses = [
     'Add Instagram',
+    'Add Email',
     'Ready to Pitch',
     'Wait for Follow-up 1',
     'Follow-up 1 Due',

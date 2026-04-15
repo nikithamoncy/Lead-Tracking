@@ -35,8 +35,11 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
   const handleCopyRow = () => {
     if (!lead) return;
     
-    // Properties to ignore (internal UI state, not from Google Sheet)
-    const ignoreProps = ['id', 'primaryStatus', 'primaryStatusText', 'latestPostDate', 'originalIndex'];
+    // Properties to ignore (internal UI state and specific requested fields)
+    const ignoreProps = [
+      'id', 'primaryStatus', 'primaryStatusText', 'latestPostDate', 'originalIndex',
+      'Email 1st date', 'Follow up 1', 'Folloow up 1', 'Follow up 2', 'Follow up final', 'Responded'
+    ];
     
     let text = '';
     
