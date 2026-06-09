@@ -126,9 +126,8 @@ export function CRM() {
 
   const handleLeadUpdate = async (updates: Partial<UILead>) => {
     if (!selectedLead || !projectName) return;
-    
     // Use the actual Web App URL provided by the user
-    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyFEm9x5qTzIGi45ZLnzjD49DKgHu98BS36a8NU2qhU3H62ooVvrwoAnpPGHs2rBZeB/exec'; 
+    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzSwVAJTZtfs8UxBXXgicsWS6cqd6TWKCdYuR4AIca56XkYHy6mcRdCxg_iLabT9HqX2A/exec';
 
     try {
       if (WEBAPP_URL) {
