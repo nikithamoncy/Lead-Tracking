@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UILead } from '../types';
 import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
-import { getLeadField, getActualKey } from '../utils/helpers';
+import { getLeadField } from '../utils/helpers';
 
 interface LeadDetailProps {
   lead: UILead | null;
@@ -176,15 +176,15 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] grid grid-cols-2 gap-4">
             <EditableDropdown 
               label="Response" 
-              value={getLeadField(lead, 'Response') || ''} 
-              options={['Pending', 'Responded']} 
-              onSave={async (val) => await onLeadUpdate({ [getActualKey(lead, 'Response')]: val })} 
+              value={getLeadField(lead, 'Response') || 'None'} 
+              options={['None', 'Pending', 'Responded', 'Stop']} 
+              onSave={async (val) => await onLeadUpdate({ 'Response': val === 'None' ? '' : val })} 
             />
             <EditableDropdown 
               label="Auto" 
-              value={getLeadField(lead, 'Auto response') || ''} 
-              options={['set', 'not set']} 
-              onSave={async (val) => await onLeadUpdate({ [getActualKey(lead, 'Auto response')]: val })} 
+              value={getLeadField(lead, 'Auto response') || 'None'} 
+              options={['None', 'set', 'not set']} 
+              onSave={async (val) => await onLeadUpdate({ 'Auto response ': val === 'None' ? '' : val })} 
             />
           </div>
         </div>
