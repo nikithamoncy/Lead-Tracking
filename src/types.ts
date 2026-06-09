@@ -29,7 +29,7 @@ export interface LeadData {
   'followup 2': string;
   'Final': string;
   Response?: string;
-  auto?: string;
+  'Auto response'?: string;
 }
 
 export type FollowUpStatus = 

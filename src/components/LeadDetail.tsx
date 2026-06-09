@@ -182,9 +182,9 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             />
             <EditableDropdown 
               label="Auto" 
-              value={getLeadField(lead, 'auto') || ''} 
+              value={getLeadField(lead, 'Auto response') || ''} 
               options={['set', 'not set']} 
-              onSave={async (val) => await onLeadUpdate({auto: val})} 
+              onSave={async (val) => await onLeadUpdate({'Auto response': val})} 
             />
           </div>
         </div>
