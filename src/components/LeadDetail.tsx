@@ -173,7 +173,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
             <MessageCircle className="w-5 h-5 text-blue-500" />
             Response & Auto
           </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] flex gap-8">
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] grid grid-cols-2 gap-4">
             <EditableDropdown 
               label="Response" 
               value={getLeadField(lead, 'Response') || ''} 
