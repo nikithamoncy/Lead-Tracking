@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { UILead } from '../types';
 import { ExternalLink, MapPin, Phone, Globe, Instagram, Star, Image as ImageIcon, Calendar, Trash2, X, Save, Check, MessageCircle, Edit2, ArrowLeft, Copy, Link as LinkIcon } from 'lucide-react';
-import { getLeadField } from '../utils/helpers';
+import { getLeadField, getActualKey } from '../utils/helpers';
 
 interface LeadDetailProps {
   lead: UILead | null;
@@ -178,13 +178,13 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               label="Response" 
               value={getLeadField(lead, 'Response') || ''} 
               options={['Pending', 'Responded']} 
-              onSave={async (val) => await onLeadUpdate({Response: val})} 
+              onSave={async (val) => await onLeadUpdate({ [getActualKey(lead, 'Response')]: val })} 
             />
             <EditableDropdown 
               label="Auto" 
               value={getLeadField(lead, 'Auto response') || ''} 
               options={['set', 'not set']} 
-              onSave={async (val) => await onLeadUpdate({'Auto response': val})} 
+              onSave={async (val) => await onLeadUpdate({ [getActualKey(lead, 'Auto response')]: val })} 
             />
           </div>
         </div>

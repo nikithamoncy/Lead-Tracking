@@ -7,3 +7,13 @@ export const getLeadField = (lead: any, key: string): string => {
   
   return actualKey ? lead[actualKey] : '';
 };
+
+export const getActualKey = (lead: any, key: string): string => {
+  if (!lead) return key;
+  if (lead[key] !== undefined) return key;
+  
+  const searchLower = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const actualKey = Object.keys(lead).find(k => k.toLowerCase().replace(/[^a-z0-9]/g, '') === searchLower);
+  
+  return actualKey || key;
+};
