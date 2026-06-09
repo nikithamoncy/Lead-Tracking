@@ -102,12 +102,91 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </div>
         </div>
 
+        {/* Links & Social Section */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+            <LinkIcon className="w-5 h-5 text-pink-500" />
+            Links & Social
+          </h3>
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm flex flex-col gap-4">
+            <div className="flex flex-wrap gap-4 items-center">
+              <EditableLinkBadge url={getLeadField(lead, 'Insta Url') || ''} onSave={async (val) => await onLeadUpdate({'Insta Url': val})} />
+              
+              {lead['Map Url'] && (
+                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <MapPin className="w-4 h-4 text-emerald-500" />
+                  Map URL
+                </a>
+              )}
+              {lead.Website && (
+                <a href={lead.Website} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <Globe className="w-4 h-4 text-amber-500" />
+                  Website
+                </a>
+              )}
+              {lead['Root url'] && (
+                <a href={lead['Root url']} target="_blank" rel="noopener noreferrer" 
+                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
+                  <ExternalLink className="w-4 h-4 text-blue-500" />
+                  Root URL
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <MetricCard icon={<Star className="w-5 h-5 text-amber-400" />} label="Score" value={lead['Total Score'] || '-'} />
           <MetricCard icon={<CheckCircle className="w-5 h-5 text-blue-400" />} label="Reviews" value={lead['Review Count'] || '-'} />
           <MetricCard icon={<ImageIcon className="w-5 h-5 text-purple-400" />} label="Images" value={lead['Image Count'] || '-'} />
           <MetricCard icon={<Phone className="w-5 h-5 text-emerald-400" />} label="Phone" value={lead.Number?.split('\n')[0] || '-'} />
+        </div>
+
+        {/* Outreach Timeline */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-amber-500" />
+            Outreach Timeline
+          </h3>
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
+            <div className="grid md:grid-cols-2 gap-4 relative">
+              <TimelineItem label="Email 1st Date" date={getLeadField(lead, '1st dm')} isActive={!!getLeadField(lead, '1st dm')} onSave={async (val) => {
+                const updates: any = { '1st dm': val };
+                if (val && !getLeadField(lead, 'Response')) {
+                  updates['Response'] = 'Pending';
+                }
+                await onLeadUpdate(updates);
+              }} />
+              <TimelineItem label="Follow Up 1" date={getLeadField(lead, 'followup 1')} isActive={!!getLeadField(lead, 'followup 1')} onSave={async (val) => await onLeadUpdate({'followup 1': val})} disabled={!getLeadField(lead, '1st dm')} />
+              <TimelineItem label="Follow Up 2" date={getLeadField(lead, 'followup 2')} isActive={!!getLeadField(lead, 'followup 2')} onSave={async (val) => await onLeadUpdate({'followup 2': val})} disabled={!getLeadField(lead, 'followup 1')} />
+              <TimelineItem label="Follow Up 3 (Final)" date={getLeadField(lead, 'Final')} isActive={!!getLeadField(lead, 'Final')} onSave={async (val) => await onLeadUpdate({'Final': val})} disabled={!getLeadField(lead, 'followup 2')} />
+            </div>
+          </div>
+        </div>
+
+        {/* Response Section */}
+        <div className="max-w-md space-y-3">
+          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
+            <MessageCircle className="w-5 h-5 text-blue-500" />
+            Response & Auto
+          </h3>
+          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] flex gap-8">
+            <EditableDropdown 
+              label="Response" 
+              value={getLeadField(lead, 'Response') || ''} 
+              options={['Pending', 'Responded']} 
+              onSave={async (val) => await onLeadUpdate({Response: val})} 
+            />
+            <EditableDropdown 
+              label="Auto" 
+              value={getLeadField(lead, 'auto') || ''} 
+              options={['set', 'not set']} 
+              onSave={async (val) => await onLeadUpdate({auto: val})} 
+            />
+          </div>
         </div>
 
         {/* Location Section */}
@@ -152,41 +231,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </div>
         </div>
 
-        {/* Links & Social Section */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-            <LinkIcon className="w-5 h-5 text-pink-500" />
-            Links & Social
-          </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm flex flex-col gap-4">
-            <div className="flex flex-wrap gap-4 items-center">
-              <EditableLinkBadge url={lead['Instagram URL'] || ''} onSave={async (val) => await onLeadUpdate({'Instagram URL': val})} />
-              
-              {lead['Map Url'] && (
-                <a href={lead['Map Url']} target="_blank" rel="noopener noreferrer" 
-                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
-                  <MapPin className="w-4 h-4 text-emerald-500" />
-                  Map URL
-                </a>
-              )}
-              {lead.Website && (
-                <a href={lead.Website} target="_blank" rel="noopener noreferrer" 
-                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
-                  <Globe className="w-4 h-4 text-amber-500" />
-                  Website
-                </a>
-              )}
-              {lead['Root url'] && (
-                <a href={lead['Root url']} target="_blank" rel="noopener noreferrer" 
-                   className="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-full text-sm text-zinc-300 transition-colors shadow-sm cursor-pointer">
-                  <ExternalLink className="w-4 h-4 text-blue-500" />
-                  Root URL
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-
         {/* Email Content Section */}
         <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/40 border border-zinc-800 rounded-2xl p-4 backdrop-blur-sm shadow-lg space-y-4">
           <div className="flex justify-between items-center border-b border-zinc-800/50 pb-2 mb-2">
@@ -224,46 +268,6 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               <CopyButton text={lead['Email Content'] || ''} title="Copy Content" />
             </div>
             <EditableTextarea value={lead['Email Content'] || ''} label="Content" onSave={async (val) => await onLeadUpdate({'Email Content': val})} />
-          </div>
-        </div>
-
-        {/* Outreach Timeline */}
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-amber-500" />
-            Outreach Timeline
-          </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
-            <div className="grid md:grid-cols-2 gap-4 relative">
-              <TimelineItem label="Email 1st Date" date={getLeadField(lead, 'Email 1st date')} isActive={!!getLeadField(lead, 'Email 1st date')} onSave={async (val) => {
-                const updates: any = { 'Email 1st date': val };
-                if (val && !getLeadField(lead, 'Responded')) {
-                  updates['Responded'] = 'Pending';
-                }
-                await onLeadUpdate(updates);
-              }} />
-              <TimelineItem label="Follow Up 1" date={getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1')} isActive={!!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} onSave={async (val) => await onLeadUpdate({'Folloow up 1': val})} disabled={!getLeadField(lead, 'Email 1st date')} />
-              <TimelineItem label="Follow Up 2" date={getLeadField(lead, 'Follow up 2')} isActive={!!getLeadField(lead, 'Follow up 2')} onSave={async (val) => await onLeadUpdate({'Follow up 2': val})} disabled={!(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'))} />
-              <TimelineItem label="Follow Up 3" date={getLeadField(lead, 'Follow up 3')} isActive={!!getLeadField(lead, 'Follow up 3')} onSave={async (val) => await onLeadUpdate({'Follow up 3': val})} disabled={!getLeadField(lead, 'Follow up 2')} />
-              <TimelineItem label="Follow Up 4" date={getLeadField(lead, 'Follow up 4')} isActive={!!getLeadField(lead, 'Follow up 4')} onSave={async (val) => await onLeadUpdate({'Follow up 4': val})} disabled={!getLeadField(lead, 'Follow up 3')} />
-              <TimelineItem label="Follow Up 5 (Final)" date={getLeadField(lead, 'Follow up final')} isActive={!!getLeadField(lead, 'Follow up final')} onSave={async (val) => await onLeadUpdate({'Follow up final': val})} disabled={!getLeadField(lead, 'Follow up 4')} />
-            </div>
-          </div>
-        </div>
-
-        {/* Response Section */}
-        <div className="max-w-sm space-y-3">
-          <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-blue-500" />
-            Response
-          </h3>
-          <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px]">
-            <EditableDropdown 
-              label="Responded" 
-              value={getLeadField(lead, 'Responded') || ''} 
-              options={['Pending', 'Responded', 'auto response', 'Stop']} 
-              onSave={async (val) => await onLeadUpdate({Responded: val})} 
-            />
           </div>
         </div>
 

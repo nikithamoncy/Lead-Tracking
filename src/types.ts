@@ -11,11 +11,11 @@ export interface LeadData {
   'Root url': string;
   'Email quality': string;
   'Map Url': string;
-  'Instagram URL': string;
+  'Insta Url': string;
   Email: string;
   'Email Subject': string;
   'Email Content': string;
-  'Email 1st date': string;
+  '1st dm': string;
   'Used Mail id': string;
   Info: string;
   'Insta Bio': string;
@@ -25,22 +25,17 @@ export interface LeadData {
   'latest post'?: string;
   personalization?: string;
   Status: string;
-  'Folloow up 1': string;
-  'Follow up 2': string;
-  'Follow up 3'?: string;
-  'Follow up 4'?: string;
-  'Follow up 5'?: string;
-  'Follow up 6'?: string;
-  'Follow up final': string;
-  Responded?: string;
+  'followup 1': string;
+  'followup 2': string;
+  'Final': string;
+  Response?: string;
+  auto?: string;
 }
 
 export type FollowUpStatus = 
   | 'uncontacted' 
   | 'wait_f1' | 'due_f1' 
   | 'wait_f2' | 'due_f2' 
-  | 'wait_f3' | 'due_f3' 
-  | 'wait_f4' | 'due_f4' 
   | 'wait_final' | 'due_final' 
   | 'completed'
   | 'stopped';

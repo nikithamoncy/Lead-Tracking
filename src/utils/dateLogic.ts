@@ -12,45 +12,24 @@ export function parseDateString(dateStr: string | null | undefined): Date | null
 export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; text: string } {
   const today = startOfDay(new Date());
 
-  const responded = getLeadField(lead, 'Responded');
-  if (responded?.trim() === 'Stop') {
-    return { status: 'stopped', text: 'Stopped' };
-  }
-
-  const email1Date = parseDateString(getLeadField(lead, 'Email 1st date'));
-  const f1Date = parseDateString(getLeadField(lead, 'Folloow up 1') || getLeadField(lead, 'Follow up 1'));
-  const f2Date = parseDateString(getLeadField(lead, 'Follow up 2'));
-  const f3Date = parseDateString(getLeadField(lead, 'Follow up 3'));
-  const f4Date = parseDateString(getLeadField(lead, 'Follow up 4'));
-  const finalDate = parseDateString(getLeadField(lead, 'Follow up final'));
+  const email1Date = parseDateString(getLeadField(lead, '1st dm'));
+  const f1Date = parseDateString(getLeadField(lead, 'followup 1'));
+  const f2Date = parseDateString(getLeadField(lead, 'followup 2'));
+  const finalDate = parseDateString(getLeadField(lead, 'Final'));
 
   if (finalDate) {
     return { status: 'completed', text: 'Finished' };
   }
 
-  if (f4Date) {
-    if (differenceInDays(today, f4Date) >= 21) {
-      return { status: 'due_final', text: 'Follow-up 5 (Final) Due' };
-    }
-    return { status: 'wait_final', text: 'Wait for Follow-up 5 (Final)' };
-  }
-
-  if (f3Date) {
-    if (differenceInDays(today, f3Date) >= 14) {
-      return { status: 'due_f4', text: 'Follow-up 4 Due' };
-    }
-    return { status: 'wait_f4', text: 'Wait for Follow-up 4' };
-  }
-
   if (f2Date) {
-    if (differenceInDays(today, f2Date) >= 9) {
-      return { status: 'due_f3', text: 'Follow-up 3 Due' };
+    if (differenceInDays(today, f2Date) >= 4) {
+      return { status: 'due_final', text: 'Final Follow-up Due' };
     }
-    return { status: 'wait_f3', text: 'Wait for Follow-up 3' };
+    return { status: 'wait_final', text: 'Wait for Final' };
   }
 
   if (f1Date) {
-    if (differenceInDays(today, f1Date) >= 5) {
+    if (differenceInDays(today, f1Date) >= 3) {
       return { status: 'due_f2', text: 'Follow-up 2 Due' };
     }
     return { status: 'wait_f2', text: 'Wait for Follow-up 2' };
@@ -63,12 +42,8 @@ export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; t
     return { status: 'wait_f1', text: 'Wait for Follow-up 1' };
   }
 
-  if (!lead['Instagram URL'] || lead['Instagram URL'].trim() === '') {
+  if (!getLeadField(lead, 'Insta Url') || getLeadField(lead, 'Insta Url').trim() === '') {
     return { status: 'uncontacted', text: 'Add Instagram' };
-  }
-
-  if (!lead['Email Subject']?.trim() || !lead['Email Content']?.trim()) {
-    return { status: 'uncontacted', text: 'Add Email' };
   }
 
   return { status: 'uncontacted', text: 'Ready to Pitch' };

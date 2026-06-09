@@ -70,7 +70,7 @@ function App() {
       );
       const matchStatus = statusFilter === '' || lead.primaryStatusText === statusFilter;
       
-      const leadResponse = getLeadField(lead, 'Responded') || '';
+      const leadResponse = getLeadField(lead, 'Response') || '';
       let matchResponse = true;
       if (responseFilter === 'None') matchResponse = leadResponse === '';
       else if (responseFilter !== '') matchResponse = leadResponse.toLowerCase().includes(responseFilter.toLowerCase());
