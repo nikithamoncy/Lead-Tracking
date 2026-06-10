@@ -10,6 +10,11 @@ export function parseDateString(dateStr: string | null | undefined): Date | null
 }
 
 export function checkFollowUpStatus(lead: LeadData): { status: FollowUpStatus; text: string } {
+  const response = getLeadField(lead, 'Response')?.toLowerCase();
+  if (response === 'stop') {
+    return { status: 'stopped', text: 'Stopped' };
+  }
+
   const today = startOfDay(new Date());
 
   const email1Date = parseDateString(getLeadField(lead, '1st dm'));
