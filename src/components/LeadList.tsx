@@ -158,12 +158,24 @@ export const LeadList: React.FC<LeadListProps> = ({
                 <span className="flex-1 text-xs text-zinc-500 truncate mr-2">
                   {lead.City || 'Unknown City'}
                 </span>
-                <span className={cn(
-                  "text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border flex-shrink-0",
-                  getStatusColors(lead.primaryStatus)
-                )}>
-                  {lead.primaryStatusText}
-                </span>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {(lead.Follow === 'Follow' || lead.Follow === 'Unfollow') && (
+                    <span className={cn(
+                      "text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border",
+                      lead.Follow === 'Follow' 
+                        ? "text-blue-400 border-blue-500/30 bg-blue-500/10" 
+                        : "text-zinc-400 border-zinc-700 bg-zinc-800/50"
+                    )}>
+                      {lead.Follow === 'Follow' ? 'F' : 'UF'}
+                    </span>
+                  )}
+                  <span className={cn(
+                    "text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border",
+                    getStatusColors(lead.primaryStatus)
+                  )}>
+                    {lead.primaryStatusText}
+                  </span>
+                </div>
               </div>
             </button>
           );
