@@ -153,10 +153,13 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm">
             <div className="grid md:grid-cols-2 gap-4 relative">
-              <TimelineItem label="Email 1st Date" date={getLeadField(lead, '1st dm')} isActive={!!getLeadField(lead, '1st dm')} onSave={async (val) => {
+              <TimelineItem label="1st DM Send" date={getLeadField(lead, '1st dm')} isActive={!!getLeadField(lead, '1st dm')} onSave={async (val) => {
                 const updates: any = { '1st dm': val };
                 if (val && !getLeadField(lead, 'Response')) {
                   updates['Response'] = 'Pending';
+                }
+                if (val && !getLeadField(lead, 'Follow')) {
+                  updates['Follow'] = 'Follow';
                 }
                 await onLeadUpdate(updates);
               }} />
@@ -171,7 +174,7 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
         <div className="max-w-md space-y-3">
           <h3 className="text-lg font-semibold text-zinc-100 flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-blue-500" />
-            Response & Auto
+            Response & Follow
           </h3>
           <div className="bg-zinc-900/30 border border-zinc-800/30 rounded-2xl p-4 backdrop-blur-sm min-h-[100px] grid grid-cols-2 gap-4">
             <EditableDropdown 
@@ -181,10 +184,10 @@ export const LeadDetail: React.FC<LeadDetailProps> = ({ lead, onLeadUpdate, onLe
               onSave={async (val) => await onLeadUpdate({ 'Response': val === 'None' ? '' : val })} 
             />
             <EditableDropdown 
-              label="Auto" 
-              value={getLeadField(lead, 'Auto response') || 'None'} 
-              options={['None', 'set', 'not set']} 
-              onSave={async (val) => await onLeadUpdate({ 'Auto response ': val === 'None' ? '' : val })} 
+              label="Follow" 
+              value={getLeadField(lead, 'Follow') || 'None'} 
+              options={['None', 'Follow', 'Unfollow']} 
+              onSave={async (val) => await onLeadUpdate({ 'Follow': val === 'None' ? '' : val })} 
             />
           </div>
         </div>
